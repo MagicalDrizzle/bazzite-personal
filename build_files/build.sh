@@ -13,8 +13,9 @@ set -ouex pipefail
 rpm --import https://packages.microsoft.com/keys/microsoft.asc
 echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\nautorefresh=1\ntype=rpm-md\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" | tee /etc/yum.repos.d/vscode.repo > /dev/null
 
+dnf5 config-manager setopt terra.enabled=1
 if ! dnf5 check-upgrade; then
-    dnf5 install -y qdirstat gparted gsmartcontrol udiskie code cascadia-fonts-all
+    dnf5 install -y qdirstat gparted gsmartcontrol udiskie code cascadia-fonts-all coolercontrol
 fi
 # Use a COPR Example:
 #
