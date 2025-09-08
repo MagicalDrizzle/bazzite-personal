@@ -16,7 +16,7 @@ echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com
 echo defaultyes=True | tee -a /etc/dnf/dnf.conf
 dnf5 config-manager setopt terra.enabled=1
 if ! dnf5 check-upgrade; then
-    dnf5 install -y qdirstat gparted gsmartcontrol udiskie code cascadia-fonts-all coolercontrol android-tools
+    dnf5 install -y qdirstat gparted gsmartcontrol udiskie code cascadia-fonts-all coolercontrol android-tools java-21-openjdk
 fi
 # Use a COPR Example:
 #
