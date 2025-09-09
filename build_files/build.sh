@@ -15,7 +15,7 @@ set -ouex pipefail
 mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
 mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
 
-dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/config/rhel/9/prod.repo --save-filename=microsoft-prod.repo
+dnf5 install -y https://packages.microsoft.com/config/rhel/9/packages-microsoft-prod.rpm
 dnf5 install -y powershell
 
 # VS Code
