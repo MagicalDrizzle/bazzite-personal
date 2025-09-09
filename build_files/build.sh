@@ -10,14 +10,16 @@ set -ouex pipefail
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/39/x86_64/repoview/index.html&protocol=https&redirect=1
 
 # this installs a package from fedora repos
+
+# VS Code
 rpm --import https://packages.microsoft.com/keys/microsoft.asc
 echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\nautorefresh=1\ntype=rpm-md\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" | tee /etc/yum.repos.d/vscode.repo > /dev/null
 
+# Other softwares
 echo defaultyes=True | tee -a /etc/dnf/dnf.conf
 dnf5 config-manager setopt terra.enabled=1
-if ! dnf5 check-upgrade; then
-    dnf5 install -y qdirstat gparted gsmartcontrol udiskie code cascadia-fonts-all coolercontrol android-tools java-21-openjdk
-fi
+dnf5 install -y code gparted gsmartcontrol cascadia-fonts-all coolercontrol android-tools java-21-openjdk usbview
+
 # Use a COPR Example:
 #
 # dnf5 -y copr enable ublue-os/staging
