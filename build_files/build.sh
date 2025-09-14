@@ -26,7 +26,9 @@ dnf5 install -y code
 # Other softwares
 echo defaultyes=True | tee -a /etc/dnf/dnf.conf
 dnf5 config-manager setopt terra.enabled=1
-dnf5 install -y gparted gsmartcontrol cascadia-fonts-all coolercontrol android-tools java-21-openjdk usbview
+dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap \
+                android-tools java-21-openjdk usbview \
+                cascadia-fonts-all coolercontrol
 
 # Use a COPR Example:
 #
