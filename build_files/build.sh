@@ -28,8 +28,8 @@ echo defaultyes=True | tee -a /etc/dnf/dnf.conf
 dnf5 config-manager setopt terra.enabled=1
 dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap \
                 android-tools java-21-openjdk usbview \
-                cascadia-fonts-all coolercontrol wavemon kitty kismet
-
+                cascadia-fonts-all coolercontrol wavemon kismet \
+                kitty konsole
 # Use a COPR Example:
 #
 # dnf5 -y copr enable ublue-os/staging
