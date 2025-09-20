@@ -15,27 +15,33 @@ set -ouex pipefail
 mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
 mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
 
-dnf5 install -y https://packages.microsoft.com/config/rhel/9/packages-microsoft-prod.rpm
+dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/config/rhel/9/prod.repo
 dnf5 install -y powershell
+sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/prod.repo
 
 # VS Code
 rpm --import https://packages.microsoft.com/keys/microsoft.asc
 echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\nautorefresh=1\ntype=rpm-md\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" | tee /etc/yum.repos.d/vscode.repo > /dev/null
 dnf5 install -y code
+sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/vscode.repo
 
 # Other softwares
 echo defaultyes=True | tee -a /etc/dnf/dnf.conf
-dnf5 config-manager setopt terra.enabled=1
+sed -zi 's@enabled=0@enabled=1@g' /etc/yum.repos.d/terra.repo
 dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap \
                 android-tools java-21-openjdk usbview \
                 cascadia-fonts-all coolercontrol wavemon \
-                kitty konsole
+                kitty konsole dnfdragora
 # Use a COPR Example:
 #
 # dnf5 -y copr enable ublue-os/staging
 # dnf5 -y install package
 # Disable COPRs so they don't end up enabled on the final image:
 # dnf5 -y copr disable ublue-os/staging
+
+dnf5 -y copr enable timlau/yumex-ng
+dnf5 -y install yumex
+dnf5 -y copr disable timlau/yumex-ng
 
 #### Example for enabling a System Unit File
 
