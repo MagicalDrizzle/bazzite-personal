@@ -31,10 +31,9 @@ sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/terra.repo
 dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap \
                 android-tools java-21-openjdk usbview \
                 cascadia-fonts-all coolercontrol wavemon \
-                kitty konsole rmlint asar
+                kitty konsole rmlint plasma-workspace-x11
 dnf5 install -y --setopt=install_weak_deps=False plasma-discover \
-                        plasma-discover-flatpak plasma-discover-kns \
-                        plasma-discover-notifier
+                        plasma-discover-flatpak plasma-discover-kns
 # Use a COPR Example:
 #
 # dnf5 -y copr enable ublue-os/staging
