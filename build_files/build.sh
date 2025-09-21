@@ -34,7 +34,7 @@ dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap \
                 kitty konsole rmlint
 dnf5 install -y --setopt=install_weak_deps=False plasma-discover \
                         plasma-discover-flatpak plasma-discover-kns \
-                        plasma-discover-notifier plasma-discover-rpm-ostree
+                        plasma-discover-notifier
 # Use a COPR Example:
 #
 # dnf5 -y copr enable ublue-os/staging
