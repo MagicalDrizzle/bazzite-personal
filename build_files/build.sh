@@ -31,17 +31,16 @@ sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/terra.repo
 dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap \
                 android-tools java-21-openjdk usbview \
                 cascadia-fonts-all coolercontrol wavemon \
-                kitty konsole
+                kitty konsole rmlint
+dnf5 install -y --setopt=install_weak_deps=False plasma-discover \
+                        plasma-discover-flatpak plasma-discover-kns \
+                        plasma-discover-notifier plasma-discover-rpm-ostree
 # Use a COPR Example:
 #
 # dnf5 -y copr enable ublue-os/staging
 # dnf5 -y install package
 # Disable COPRs so they don't end up enabled on the final image:
 # dnf5 -y copr disable ublue-os/staging
-
-dnf5 -y copr enable timlau/yumex-ng
-dnf5 -y install yumex
-dnf5 -y copr disable timlau/yumex-ng
 
 #### Example for enabling a System Unit File
 
