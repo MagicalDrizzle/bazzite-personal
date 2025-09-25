@@ -25,6 +25,11 @@ echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com
 dnf5 install -y code
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/vscode.repo
 
+# Syncthing Tray
+dnf config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_42/home:mkittler.repo
+dnf5 install -y syncthingtray-qt6 syncthingplasmoid-qt6 syncthingfileitemaction-qt6 syncthingctl-qt6
+sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/home:mkittler.repo
+
 # Other softwares
 echo defaultyes=True | tee -a /etc/dnf/dnf.conf
 sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/terra.repo
