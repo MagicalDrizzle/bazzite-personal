@@ -15,9 +15,9 @@ set -ouex pipefail
 mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
 mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
 
-dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/config/rhel/9/prod.repo
+dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/config/rhel/9/prod.repo --save-filename=microsoft-prod.repo
 dnf5 install -y powershell
-sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/prod.repo
+sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/microsoft-prod.repo
 
 # VS Code
 rpm --import https://packages.microsoft.com/keys/microsoft.asc
