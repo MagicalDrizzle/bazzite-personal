@@ -32,10 +32,17 @@ sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/home:mkittler.repo
 
 # Other softwares
 echo defaultyes=True | tee -a /etc/dnf/dnf.conf
+# Enable Terra
 sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/terra.repo
+# Enable RPM Fusion
+dnf config-manager unsetopt rpmfusion-free.enabled
+dnf config-manager unsetopt rpmfusion-free-updates.enabled
+dnf config-manager unsetopt rpmfusion-nonfree.enabled
+dnf config-manager unsetopt rpmfusion-nonfree-updates.enabled
+
 dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap \
                 android-tools java-21-openjdk usbview \
-                cascadia-fonts-all coolercontrol wavemon \
+                cascadia-fonts-all coolercontrol wavemon playerctl cmus \
                 kitty konsole ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
                 rmlint cava vkmark iotop powertop \
                 plasma-workspace-x11
