@@ -34,6 +34,9 @@ sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/home:mkittler.repo
 echo defaultyes=True | tee -a /etc/dnf/dnf.conf
 # Enable Terra
 sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/terra.repo
+# Enable Topgrade
+dnf5 config-manager setopt terra.exclude='nerd-fonts'
+dnf5 config-manager setopt terra-extras.exclude='nerd-fonts'
 # Enable RPM Fusion
 dnf config-manager unsetopt rpmfusion-free.enabled
 dnf config-manager unsetopt rpmfusion-free-updates.enabled
