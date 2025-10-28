@@ -36,13 +36,9 @@ echo defaultyes=True | tee -a /etc/dnf/dnf.conf
 sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/terra.repo
 sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/terra-extras.repo
 # Enable RPM Fusion
-dnf config-manager unsetopt rpmfusion-free.enabled
-dnf config-manager unsetopt rpmfusion-free-updates.enabled
-dnf config-manager unsetopt rpmfusion-nonfree.enabled
-dnf config-manager unsetopt rpmfusion-nonfree-updates.enabled
+dnf config-manager unsetopt rpmfusion-free.enabled rpmfusion-free-updates.enabled rpmfusion-nonfree.enabled rpmfusion-nonfree-updates.enabled
 # Topgrade
-dnf5 config-manager setopt terra.exclude='nerd-fonts'
-dnf5 config-manager setopt terra-extras.exclude='nerd-fonts'
+dnf5 config-manager setopt terra.exclude='nerd-fonts' terra-extras.exclude='nerd-fonts'
 dnf5 upgrade -y topgrade
 
 dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap \
