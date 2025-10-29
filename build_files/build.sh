@@ -40,10 +40,12 @@ dnf5 config-manager unsetopt rpmfusion-free.enabled rpmfusion-free-updates.enabl
 # Topgrade
 dnf5 config-manager setopt terra.exclude='nerd-fonts' terra-extras.exclude='nerd-fonts'
 dnf5 upgrade -y topgrade
+# wavemon (removed in F43)
+dnf5 install -y https://dl.fedoraproject.org/pub/fedora/linux/releases/42/Everything/x86_64/os/Packages/w/wavemon-0.9.6-3.fc42.x86_64.rpm
 
 dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap \
                 android-tools java-21-openjdk usbview \
-                cascadia-fonts-all coolercontrol wavemon playerctl cmus \
+                cascadia-fonts-all coolercontrol playerctl cmus \
                 kitty konsole ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
                 rmlint cava vkmark iotop powertop \
                 plasma-workspace-x11
