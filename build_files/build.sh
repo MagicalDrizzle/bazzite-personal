@@ -11,7 +11,7 @@ set -ouex pipefail
 
 # this installs a package from fedora repos
 
-# PowerShell
+# PowerShell, VSCode
 mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
 mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
 
@@ -19,13 +19,11 @@ if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
     dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/config/rhel/9/prod.repo --save-filename=microsoft-prod.repo
     dnf5 install -y powershell
     sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/microsoft-prod.repo
-fi
 
-# VS Code
-rpm --import https://packages.microsoft.com/keys/microsoft.asc
-dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/yumrepos/vscode/config.repo --save-filename=vscode.repo
-dnf5 install -y code
-sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/vscode.repo
+    dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/yumrepos/vscode/config.repo --save-filename=vscode.repo
+    dnf5 install -y code
+    sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/vscode.repo
+fi
 
 # Syncthing Tray
 dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_42/home:mkittler.repo
