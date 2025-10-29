@@ -21,7 +21,7 @@ mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
 #    sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/microsoft-prod.repo
 #else
     pwver=$(curl -s https://api.github.com/repos/PowerShell/PowerShell/tags | grep -Pom 1 '[0-9]+\.[0-9]+\.[0-9](?=")')
-    dnf5 install -y https://github.com/PowerShell/PowerShell/releases/download/v$pwver/powershell-$pwver-1.rh.x86_64.rpm
+    dnf5 install -y https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-1.rh.x86_64.rpm
 #fi
 
 # VS Code
