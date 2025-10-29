@@ -15,8 +15,7 @@ set -ouex pipefail
 mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
 mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
 
-timeout 5s ping -qc 3 packages.microsoft.com
-if [ $? -eq 0 ]; then
+if timeout 5s ping -qc 3 packages.microsoft.com; then
     dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/config/rhel/9/prod.repo --save-filename=microsoft-prod.repo
     dnf5 install -y powershell
     sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/microsoft-prod.repo
