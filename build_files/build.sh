@@ -12,10 +12,10 @@ set -ouex pipefail
 # this installs a package from fedora repos
 
 # PowerShell, VSCode
-mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
-mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
-
 if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
+    mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
+    mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
+
     dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/config/rhel/9/prod.repo --save-filename=microsoft-prod.repo
     dnf5 install -y powershell
     sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/microsoft-prod.repo
@@ -29,6 +29,21 @@ fi
 dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_42/home:mkittler.repo
 dnf5 install -y syncthingtray-qt6 syncthingplasmoid-qt6 syncthingfileitemaction-qt6 syncthingctl-qt6
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/home:mkittler.repo
+
+# FirefoxPWA
+tee /etc/yum.repos.d/firefoxpwa.repo > /dev/null <<EOF
+[firefoxpwa]
+name=FirefoxPWA
+metadata_expire=7d
+baseurl=https://packagecloud.io/filips/FirefoxPWA/rpm_any/rpm_any/\$basearch
+gpgkey=https://packagecloud.io/filips/FirefoxPWA/gpgkey
+       https://packagecloud.io/filips/FirefoxPWA/gpgkey/filips-FirefoxPWA-912AD9BE47FEB404.pub.gpg
+repo_gpgcheck=1
+gpgcheck=1
+enabled=1
+EOF
+dnf5 install -y firefoxpwa
+sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/firefoxpwa.repo
 
 # Other softwares
 echo defaultyes=True | tee -a /etc/dnf/dnf.conf
@@ -44,7 +59,7 @@ dnf5 upgrade -y topgrade
 dnf5 install -y https://dl.fedoraproject.org/pub/fedora/linux/releases/42/Everything/x86_64/os/Packages/w/wavemon-0.9.6-3.fc42.x86_64.rpm
 
 dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap \
-                android-tools java-21-openjdk usbview \
+                android-tools java-21-openjdk usbview podman-compose \
                 cascadia-fonts-all coolercontrol playerctl cmus \
                 kitty konsole ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
                 rmlint cava vkmark iotop powertop \
