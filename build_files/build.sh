@@ -11,11 +11,10 @@ set -ouex pipefail
 
 # this installs a package from fedora repos
 
+mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
+mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
 # PowerShell, VSCode
 if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
-    mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
-    mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
-
     dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/config/rhel/9/prod.repo --save-filename=microsoft-prod.repo
     dnf5 install -y powershell
     sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/microsoft-prod.repo
@@ -24,6 +23,11 @@ if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
     dnf5 install -y code
     sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/vscode.repo
 fi
+
+# Beyond Compare
+dnf5 config-manager addrepo --from-repofile=https://www.scootersoftware.com/scootersoftware.repo
+dnf5 install -y bcompare
+sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/scootersoftware.repo
 
 # Syncthing Tray
 dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_42/home:mkittler.repo
