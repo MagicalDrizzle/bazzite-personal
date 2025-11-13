@@ -69,7 +69,9 @@ dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap \
                 kitty konsole ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
                 rmlint cava vkmark iotop powertop \
                 plasma-workspace-x11 \
-                pandoc pandoc-pdf weasyprint
+                pandoc pandoc-pdf weasyprint \
+                android-udev-rules chkconfig cpuinfo gcc-c++ plocate
+                # cmake fakeroot mujs patch pigz rhash (included in brew)
 dnf5 install -y --setopt=install_weak_deps=False plasma-discover \
                         plasma-discover-flatpak plasma-discover-kns
 # Use a COPR Example:
