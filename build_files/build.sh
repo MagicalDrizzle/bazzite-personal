@@ -14,7 +14,7 @@ set -ouex pipefail
 mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
 mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
 # PowerShell, VSCode
-if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
+#if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
     dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/config/rhel/9/prod.repo --save-filename=microsoft-prod.repo
     dnf5 install -y powershell
     sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/microsoft-prod.repo
@@ -22,7 +22,7 @@ if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
     dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/yumrepos/vscode/config.repo --save-filename=vscode.repo
     dnf5 install -y code
     sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/vscode.repo
-fi
+#fi
 
 # Beyond Compare
 dnf5 config-manager addrepo --from-repofile=https://www.scootersoftware.com/scootersoftware.repo
@@ -68,7 +68,7 @@ dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap \
                 android-tools java-21-openjdk usbview podman-compose \
                 cascadia-fonts-all coolercontrol playerctl cmus \
                 kitty konsole ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
-                rmlint cava vkmark iotop powertop \
+                rmlint cava vkmark iotop powertop kcm_systemd systemd-standalone-shutdown \
                 plasma-workspace-x11 \
                 pandoc pandoc-pdf weasyprint cups-pdf \
                 android-udev-rules chkconfig cpuinfo gcc-c++ plocate
