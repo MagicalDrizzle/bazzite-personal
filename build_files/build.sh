@@ -57,7 +57,7 @@ sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/terra-extras.repo
 # Enable RPM Fusion
 dnf5 config-manager unsetopt rpmfusion-free.enabled rpmfusion-free-updates.enabled rpmfusion-nonfree.enabled rpmfusion-nonfree-updates.enabled
 # Topgrade
-dnf5 config-manager setopt terra.exclude='nerd-fonts' terra-extras.exclude='nerd-fonts'
+dnf5 config-manager setopt terra.exclude='nerd-fonts scx-scheds steam python3-protobuf' terra-extras.exclude='nerd-fonts scx-scheds steam python3-protobuf'
 dnf5 upgrade -y topgrade
 # wavemon (removed in F43)
 dnf5 install -y https://dl.fedoraproject.org/pub/fedora/linux/releases/42/Everything/x86_64/os/Packages/w/wavemon-0.9.6-3.fc42.x86_64.rpm
