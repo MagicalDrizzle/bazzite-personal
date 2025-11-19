@@ -68,7 +68,7 @@ dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap \
                 android-tools java-21-openjdk usbview podman-compose \
                 cascadia-fonts-all coolercontrol playerctl cmus \
                 kitty konsole ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
-                rmlint cava vkmark iotop powertop kcm_systemd \
+                rmlint cava vkmark iotop powertop kcm_systemd firejail \
                 plasma-workspace-x11 \
                 pandoc pandoc-pdf weasyprint cups-pdf \
                 android-udev-rules chkconfig cpuinfo gcc-c++ plocate
