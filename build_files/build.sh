@@ -17,7 +17,7 @@ mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
 #if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
     dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/config/rhel/9/prod.repo --save-filename=microsoft-prod.repo
     # dnf5 install -y powershell
-    dmf5 install https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-1.rh.x86_64.rpm
+    dmf5 install -y https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-1.rh.x86_64.rpm
     sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/microsoft-prod.repo
 
     dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/yumrepos/vscode/config.repo --save-filename=vscode.repo
