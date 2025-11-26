@@ -32,7 +32,7 @@ sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/scootersoftware.repo
 
 # VirtIO paravirtualization drivers for Windows
 dnf5 config-manager addrepo --from-repofile=https://fedorapeople.org/groups/virt/virtio-win/virtio-win.repo
-dnf5 install -y virtio-win
+# dnf5 install -y virtio-win        # you can get ISOs easily
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/virtio-win.repo
 
 # Syncthing Tray
