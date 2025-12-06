@@ -66,8 +66,9 @@ dnf5 config-manager unsetopt rpmfusion-free.enabled rpmfusion-free-updates.enabl
 dnf5 config-manager setopt terra.exclude='nerd-fonts scx-scheds steam python3-protobuf' terra-extras.exclude='nerd-fonts scx-scheds steam python3-protobuf'
 dnf5 upgrade -y topgrade
 # wavemon (removed in F43)
-dnf5 install -y https://dl.fedoraproject.org/pub/fedora/linux/releases/42/Everything/x86_64/os/Packages/w/wavemon-0.9.6-3.fc42.x86_64.rpm
-
+if ! dnf5 install -y https://web.archive.org/web/20251206132707/https://kojipkgs.fedoraproject.org/packages/wavemon/0.9.6/4.fc43/x86_64/wavemon-0.9.6-4.fc43.x86_64.rpm; then
+  dnf5 install -y https://dl.fedoraproject.org/pub/fedora/linux/releases/42/Everything/x86_64/os/Packages/w/wavemon-0.9.6-3.fc42.x86_64.rpm
+fi
 # https://kojipkgs.fedoraproject.org/packages/wavemon/0.9.6/4.fc43/x86_64/wavemon-0.9.6-4.fc43.x86_64.rpm
 
 dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap \
