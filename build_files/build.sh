@@ -25,6 +25,12 @@ if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
     sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/vscode.repo
 fi
 
+# Sublime Text
+rpm -v --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg
+dnf5 config-manager addrepo --from-repofile=https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo
+dnf5 install -y sublime-text
+sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/sublime-text.repo
+
 # Beyond Compare
 dnf5 config-manager addrepo --from-repofile=https://www.scootersoftware.com/scootersoftware.repo
 dnf5 install -y bcompare
