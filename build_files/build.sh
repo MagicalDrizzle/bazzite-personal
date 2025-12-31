@@ -47,6 +47,11 @@ dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/reposi
 dnf5 install -y syncthingtray-qt6 syncthingplasmoid-qt6 syncthingfileitemaction-qt6 syncthingctl-qt6
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/home:mkittler.repo
 
+# Faugus Launcher
+dnf5 -y copr enable faugus/faugus-launcher
+dnf5 -y install faugus-launcher
+sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:faugus:faugus-launcher.repo
+
 # FirefoxPWA
 tee /etc/yum.repos.d/firefoxpwa.repo > /dev/null <<EOF
 [firefoxpwa]
