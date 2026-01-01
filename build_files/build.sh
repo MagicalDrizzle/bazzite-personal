@@ -25,6 +25,12 @@ if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
     sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/vscode.repo
 fi
 
+# nohang
+dnf5 install -y https://github.com/MagicalDrizzle/misc-binaries/raw/refs/heads/main/nohang-0.3.0-5.fc42.noarch.rpm \
+https://github.com/MagicalDrizzle/misc-binaries/raw/refs/heads/main/nohang-desktop-0.3.0-5.fc42.noarch.rpm
+systemctl enable nohang-desktop
+systemctl mask systemd-oomd
+
 # Sublime Text
 rpm --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg
 dnf5 config-manager addrepo --from-repofile=https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo
