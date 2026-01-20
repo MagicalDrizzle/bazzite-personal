@@ -39,7 +39,8 @@ rpm -i --nodigest sublime-text-*.rpm
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/sublime-text.repo
 
 # Tailscale
-dnf5 config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+# Repo file already included
+sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/tailscale.repo
 dnf5 install -y tailscale
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/tailscale.repo
 
