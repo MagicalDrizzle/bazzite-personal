@@ -38,6 +38,11 @@ dnf5 download -y sublime-text
 rpm -i --nodigest sublime-text-*.rpm
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/sublime-text.repo
 
+# Tailscale
+dnf5 config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+dnf5 install -y tailscale
+sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/tailscale.repo
+
 # Beyond Compare
 dnf5 config-manager addrepo --from-repofile=https://www.scootersoftware.com/scootersoftware.repo
 dnf5 install -y bcompare
