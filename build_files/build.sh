@@ -38,6 +38,10 @@ dnf5 download -y sublime-text
 rpm -i --nodigest sublime-text-*.rpm
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/sublime-text.repo
 
+# Portmaster
+PM_VER=$(curl -sL https://api.github.com/repos/safing/portmaster/releases/latest | jq .tag_name)
+dnf5 install -y https://updates.safing.io/latest/linux_amd64/packages/Portmaster-${PM_VER:2:-1}-1.x86_64.rpm
+
 # Tailscale
 # Repo file already included
 sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/tailscale.repo
