@@ -31,6 +31,11 @@ https://github.com/MagicalDrizzle/misc-binaries/raw/refs/heads/main/nohang-deskt
 systemctl enable nohang-desktop
 systemctl mask systemd-oomd
 
+# RStudio
+RS_VER=$(curl -sL https://api.github.com/repos/rstudio/rstudio/tags | jq .[0].name)
+RS_NAME=${RS_VER:2:-1}
+dnf5 install -y https://download1.rstudio.org/electron/rhel9/x86_64/rstudio-${RS_NAME/+/-}-x86_64.rpm
+
 # Sublime Text
 rpm --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg
 dnf5 config-manager addrepo --from-repofile=https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo
