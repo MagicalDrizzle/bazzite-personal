@@ -99,7 +99,7 @@ if ! dnf5 install -y https://web.archive.org/web/20251206132707/https://kojipkgs
 fi
 # https://kojipkgs.fedoraproject.org/packages/wavemon/0.9.6/4.fc43/x86_64/wavemon-0.9.6-4.fc43.x86_64.rpm
 
-dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap \
+dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap memtest86+ \
                 android-tools java-21-openjdk usbview podman-compose pypy \
                 cascadia-fonts-all coolercontrol playerctl cmus \
                 kitty konsole ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
