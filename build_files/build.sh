@@ -25,6 +25,11 @@ if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
     sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/vscode.repo
 fi
 
+# CoolerControl (Terra is real outdated)
+dnf copr enable codifryed/CoolerControl
+dnf install -y coolercontrol
+systemctl enable --now coolercontrold
+
 # nohang
 dnf5 install -y https://github.com/MagicalDrizzle/misc-binaries/raw/refs/heads/main/nohang-0.3.0-5.fc42.noarch.rpm \
 https://github.com/MagicalDrizzle/misc-binaries/raw/refs/heads/main/nohang-desktop-0.3.0-5.fc42.noarch.rpm
@@ -106,7 +111,7 @@ fi
 
 dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap memtest86+ \
                 android-tools java-21-openjdk usbview podman-compose pypy \
-                cascadia-fonts-all coolercontrol playerctl cmus \
+                cascadia-fonts-all playerctl cmus \
                 kitty konsole ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
                 rmlint cava vkmark iotop powertop below firejail earlyoom hardinfo2 \
                 lxqt-admin zswap-cli \
