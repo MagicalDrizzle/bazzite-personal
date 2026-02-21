@@ -26,8 +26,8 @@ if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
 fi
 
 # CoolerControl (Terra is real outdated)
-dnf5 copr enable codifryed/CoolerControl
-dnf5 install -y coolercontrol
+dnf5 copr enable -y codifryed/CoolerControl
+dnf5 install -y coolercontrol --repo copr:copr.fedorainfracloud.org:codifryed:CoolerControl
 systemctl enable --now coolercontrold
 
 # nohang
