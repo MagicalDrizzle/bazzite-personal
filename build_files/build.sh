@@ -27,7 +27,7 @@ fi
 
 # CoolerControl (Terra is real outdated)
 dnf5 copr enable -y codifryed/CoolerControl
-dnf5 install -y coolercontrol --repo copr:copr.fedorainfracloud.org:codifryed:CoolerControl
+dnf5 install -y coolercontrol coolercontrold --repo copr:copr.fedorainfracloud.org:codifryed:CoolerControl
 systemctl enable --now coolercontrold
 
 # nohang
