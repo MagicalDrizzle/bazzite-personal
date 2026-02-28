@@ -69,8 +69,8 @@ dnf5 config-manager addrepo --from-repofile=https://fedorapeople.org/groups/virt
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/virtio-win.repo
 
 # Syncthing Tray
-dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_42/home:mkittler.repo
-dnf5 install -y syncthingtray-qt6 syncthingplasmoid-qt6 syncthingfileitemaction-qt6 syncthingctl-qt6
+#dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_42/home:mkittler.repo
+#dnf5 install -y syncthingtray-qt6 syncthingplasmoid-qt6 syncthingfileitemaction-qt6 syncthingctl-qt6
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/home:mkittler.repo
 
 # Faugus Launcher
