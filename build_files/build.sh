@@ -69,8 +69,8 @@ dnf5 config-manager addrepo --from-repofile=https://fedorapeople.org/groups/virt
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/virtio-win.repo
 
 # Syncthing Tray
-#dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_42/home:mkittler.repo
-#dnf5 install -y syncthingtray-qt6 syncthingplasmoid-qt6 syncthingfileitemaction-qt6 syncthingctl-qt6
+dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_42/home:mkittler.repo
+dnf5 install -y syncthingtray-qt6 syncthingplasmoid-qt6 syncthingfileitemaction-qt6 syncthingctl-qt6
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/home:mkittler.repo
 
 # Faugus Launcher
@@ -94,19 +94,23 @@ if ! dnf5 install -y https://web.archive.org/web/20251206132707/https://kojipkgs
 fi
 # https://kojipkgs.fedoraproject.org/packages/wavemon/0.9.6/4.fc43/x86_64/wavemon-0.9.6-4.fc43.x86_64.rpm
 
+# X11
+if ! dnf5 install -y plasma-workspace-x11; then
+    exit 0
+fi
+
+
 dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap memtest86+ \
                 android-tools java-21-openjdk usbview podman-compose pypy \
                 cascadia-fonts-all playerctl cmus \
                 kitty konsole ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
                 rmlint cava vkmark iotop powertop below firejail earlyoom hardinfo2 \
                 lxqt-admin zswap-cli \
-                plasma-workspace-x11 \
                 pandoc pandoc-pdf weasyprint cups-pdf \
                 android-udev-rules chkconfig cpuinfo gcc-c++ plocate
                 # cmake fakeroot mujs patch pigz rhash (included in brew)
                 # systemd-standalone-shutdown (incompatible with systemd)
-dnf5 install -y --setopt=install_weak_deps=False plasma-discover \
-                        plasma-discover-flatpak plasma-discover-kns
+dnf5 install -y --setopt=install_weak_deps=False plasma-discover \                        plasma-discover-flatpak plasma-discover-kns
 # Use a COPR Example:
 #
 # dnf5 -y copr enable ublue-os/staging
