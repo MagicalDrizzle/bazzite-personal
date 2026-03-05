@@ -110,7 +110,7 @@ dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap memtest86+ \
                 android-udev-rules chkconfig cpuinfo gcc-c++ plocate
                 # cmake fakeroot mujs patch pigz rhash (included in brew)
                 # systemd-standalone-shutdown (incompatible with systemd)
-dnf5 install -y --setopt=install_weak_deps=False plasma-discover \                        plasma-discover-flatpak plasma-discover-kns
+dnf5 install -y --setopt=install_weak_deps=False plasma-discover plasma-discover-flatpak plasma-discover-kns
 # Use a COPR Example:
 #
 # dnf5 -y copr enable ublue-os/staging
