@@ -11,8 +11,8 @@ set -ouex pipefail
 
 # this installs a package from fedora repos
 
-mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
-mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
+#mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
+#mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
 # PowerShell, VSCode
 # Finally brew has powershell :3
 if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
