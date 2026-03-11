@@ -45,6 +45,7 @@ RS_NAME=${RS_VER:2:-1}
 dnf5 install -y https://download1.rstudio.org/electron/rhel9/x86_64/rstudio-${RS_NAME/+/-}-x86_64.rpm
 
 # Sublime Text
+mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
 rpm --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg
 dnf5 config-manager addrepo --from-repofile=https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo
 dnf5 download -y sublime-text
