@@ -27,8 +27,10 @@ fi
 
 # CoolerControl (Terra is real outdated)
 dnf5 copr enable -y codifryed/CoolerControl
-dnf5 install -y coolercontrol coolercontrold coolercontrol-liqctld --repo copr:copr.fedorainfracloud.org:codifryed:CoolerControl
+dnf5 install -y liquidctl
+dnf5 install -y coolercontrol coolercontrold --repo copr:copr.fedorainfracloud.org:codifryed:CoolerControl
 systemctl enable --now coolercontrold
+sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:codifryed:CoolerControl.repo
 
 # nohang
 dnf5 install -y https://github.com/MagicalDrizzle/misc-binaries/raw/refs/heads/main/nohang-0.3.0-5.fc42.noarch.rpm \
@@ -101,7 +103,7 @@ fi
 
 
 dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap memtest86+ \
-                android-tools java-21-openjdk usbview podman-compose pypy \
+                android-tools java-25-openjdk usbview podman-compose pypy \
                 cascadia-fonts-all playerctl cmus \
                 kitty konsole ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
                 rmlint cava vkmark iotop powertop below firejail earlyoom hardinfo2 \
