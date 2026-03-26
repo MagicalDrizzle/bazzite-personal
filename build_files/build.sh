@@ -26,6 +26,10 @@ if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
     sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/vscode.repo
 fi
 
+### Remove packages
+dnf5 remove -y ptyxis
+###
+
 # CoolerControl (Terra is real outdated)
 dnf5 copr enable -y codifryed/CoolerControl
 dnf5 install -y liquidctl
