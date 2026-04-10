@@ -86,6 +86,11 @@ dnf5 -y copr enable faugus/faugus-launcher
 dnf5 -y install faugus-launcher
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:faugus:faugus-launcher.repo
 
+# Adoptium Temurin JDK
+dnf5 install -y adoptium-temurin-java-repository
+sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/adoptium-temurin-java-repository.repo
+dnf5 install -y temurin-25-jdk
+
 # Other softwares
 echo defaultyes=True | tee -a /etc/dnf/dnf.conf
 # Enable Terra
@@ -109,7 +114,7 @@ fi
 
 
 dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap memtest86+ \
-                android-tools java-25-openjdk usbview podman-compose pypy \
+                android-tools usbview podman-compose pypy \
                 cascadia-fonts-all playerctl cmus \
                 kitty konsole ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
                 rmlint cava vkmark iotop powertop below firejail earlyoom hardinfo2 \
