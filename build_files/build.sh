@@ -77,7 +77,7 @@ dnf5 config-manager addrepo --from-repofile=https://fedorapeople.org/groups/virt
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/virtio-win.repo
 
 # Syncthing Tray
-fedora_ver=$(grep VERSION_ID </etc/os-release | grep -Eo '[0-9]+')
+fedora_ver=$(rpm -E %fedora)
 dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_$fedora_ver/home:mkittler.repo
 dnf5 install -y syncthingtray-qt6 syncthingplasmoid-qt6 syncthingfileitemaction-qt6 syncthingctl-qt6
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/home:mkittler.repo
@@ -98,7 +98,8 @@ echo defaultyes=True | tee -a /etc/dnf/dnf.conf
 sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/terra.repo
 sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/terra-extras.repo
 # Enable RPM Fusion
-dnf5 config-manager unsetopt rpmfusion-free.enabled rpmfusion-free-updates.enabled rpmfusion-nonfree.enabled rpmfusion-nonfree-updates.enabled
+dnf5 install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(fedora_ver).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(fedora_ver).noarch.rpm
+dnf5 config-manager setopt rpmfusion-free.enabled=1 rpmfusion-free-updates.enabled=1 rpmfusion-nonfree.enabled=1 rpmfusion-nonfree-updates.enabled=1
 # Topgrade
 dnf5 config-manager setopt terra.exclude='nerd-fonts scx-scheds steam python3-protobuf' terra-extras.exclude='nerd-fonts scx-scheds steam python3-protobuf'
 dnf5 upgrade -y topgrade
@@ -110,18 +111,20 @@ if ! dnf5 install -y plasma-workspace-x11; then
     exit 0
 fi
 
-
-dnf5 install -y gparted gsmartcontrol btdu btrfs-heatmap memtest86+ \
+# skip btdu, it causes trouble atm and i made a homebrew formula
+dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ \
                 android-tools usbview podman-compose pypy \
-                cascadia-fonts-all playerctl cmus \
-                kitty konsole ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
+                cascadia-fonts-all playerctl \
+                kitty ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
                 rmlint cava vkmark iotop powertop below firejail earlyoom hardinfo2 \
                 lxqt-admin zswap-cli \
                 pandoc pandoc-pdf weasyprint cups-pdf \
-                android-udev-rules chkconfig cpuinfo gcc-c++ plocate
+                android-udev-rules chkconfig cpuinfo plocate
                 # cmake fakeroot mujs patch pigz rhash (included in brew)
                 # systemd-standalone-shutdown (incompatible with systemd)
-dnf5 install -y --setopt=install_weak_deps=False plasma-discover plasma-discover-flatpak plasma-discover-kns
+
+# we have bazaar...?
+#dnf5 install -y --setopt=install_weak_deps=False plasma-discover plasma-discover-flatpak plasma-discover-kns
 # Use a COPR Example:
 #
 # dnf5 -y copr enable ublue-os/staging
