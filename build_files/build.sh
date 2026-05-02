@@ -104,8 +104,9 @@ dnf5 config-manager setopt rpmfusion-free.enabled=1 rpmfusion-free-updates.enabl
 # Topgrade
 dnf5 config-manager setopt terra.exclude='nerd-fonts scx-scheds steam python3-protobuf' terra-extras.exclude='nerd-fonts scx-scheds steam python3-protobuf'
 dnf5 upgrade -y topgrade
-# wavemon (removed in F43)
-dnf5 install -y --releasever=42 wavemon
+# Wavemon
+dnf5 copr enable -y ntulinux/wavemon
+dnf5 install -y wavemon
 
 # X11
 if ! dnf5 install -y plasma-workspace-x11; then
