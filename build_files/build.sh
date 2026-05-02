@@ -77,7 +77,8 @@ dnf5 config-manager addrepo --from-repofile=https://fedorapeople.org/groups/virt
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/virtio-win.repo
 
 # Syncthing Tray
-dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_42/home:mkittler.repo
+fedora_ver=$(grep VERSION_ID </etc/os-release | grep -Eo '[0-9]+')
+dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_$fedora_ver/home:mkittler.repo
 dnf5 install -y syncthingtray-qt6 syncthingplasmoid-qt6 syncthingfileitemaction-qt6 syncthingctl-qt6
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/home:mkittler.repo
 
@@ -102,10 +103,7 @@ dnf5 config-manager unsetopt rpmfusion-free.enabled rpmfusion-free-updates.enabl
 dnf5 config-manager setopt terra.exclude='nerd-fonts scx-scheds steam python3-protobuf' terra-extras.exclude='nerd-fonts scx-scheds steam python3-protobuf'
 dnf5 upgrade -y topgrade
 # wavemon (removed in F43)
-if ! dnf5 install -y https://web.archive.org/web/20251206132707/https://kojipkgs.fedoraproject.org/packages/wavemon/0.9.6/4.fc43/x86_64/wavemon-0.9.6-4.fc43.x86_64.rpm; then
-  dnf5 install -y https://dl.fedoraproject.org/pub/fedora/linux/releases/42/Everything/x86_64/os/Packages/w/wavemon-0.9.6-3.fc42.x86_64.rpm
-fi
-# https://kojipkgs.fedoraproject.org/packages/wavemon/0.9.6/4.fc43/x86_64/wavemon-0.9.6-4.fc43.x86_64.rpm
+dnf5 install -y --releasever=42 wavemon
 
 # X11
 if ! dnf5 install -y plasma-workspace-x11; then
