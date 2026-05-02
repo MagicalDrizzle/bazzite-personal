@@ -118,7 +118,8 @@ dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ \
                 android-tools usbview podman-compose pypy \
                 cascadia-fonts-all playerctl \
                 kitty ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
-                rmlint cava vkmark iotop powertop below firejail earlyoom hardinfo2 \
+                rmlint cava vkmark iotop powertop below firejail earlyoom \
+                hardinfo2 sysbench iperf3 \
                 lxqt-admin zswap-cli \
                 pandoc pandoc-pdf weasyprint cups-pdf \
                 android-udev-rules chkconfig cpuinfo plocate
