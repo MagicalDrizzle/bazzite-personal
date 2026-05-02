@@ -98,7 +98,7 @@ echo defaultyes=True | tee -a /etc/dnf/dnf.conf
 sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/terra.repo
 sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/terra-extras.repo
 # Enable RPM Fusion
-dnf5 install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(fedora_ver).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(fedora_ver).noarch.rpm
+dnf5 install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$fedora_ver.noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$fedora_ver.noarch.rpm
 dnf5 config-manager setopt fedora-cisco-openh264.enabled=1
 dnf5 config-manager setopt rpmfusion-free.enabled=1 rpmfusion-free-updates.enabled=1 rpmfusion-nonfree.enabled=1 rpmfusion-nonfree-updates.enabled=1
 # Topgrade
