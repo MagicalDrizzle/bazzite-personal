@@ -115,7 +115,7 @@ fi
 
 # skip btdu, it causes trouble atm and i made a homebrew formula
 dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ \
-                android-tools usbview podman-compose pypy \
+                android-tools usbview podman-compose pypy pypy3 \
                 cascadia-fonts-all playerctl \
                 kitty ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
                 rmlint cava vkmark iotop powertop below firejail earlyoom \
