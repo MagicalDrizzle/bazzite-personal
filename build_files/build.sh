@@ -57,6 +57,7 @@ rpm --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg
 dnf5 config-manager addrepo --from-repofile=https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo
 dnf5 download -y sublime-text
 rpm -i --nodigest sublime-text-*.rpm
+rm sublime-text-*.rpm
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/sublime-text.repo
 
 # Portmaster
