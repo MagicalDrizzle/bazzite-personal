@@ -11,6 +11,9 @@ set -ouex pipefail
 
 # this installs a package from fedora repos
 
+# Create /nix for Nix
+mkdir /nix
+
 #mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
 #mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
 # PowerShell, VSCode
