@@ -124,7 +124,7 @@ dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ \
                 kitty ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
                 rmlint cava vkmark iotop powertop below firejail earlyoom \
                 hardinfo2 sysbench iperf3 \
-                lxqt-admin zswap-cli \
+                lxqt-admin pcmanfm-qt zswap-cli \
                 pandoc pandoc-pdf weasyprint cups-pdf \
                 android-udev-rules chkconfig cpuinfo plocate
                 # cmake fakeroot mujs patch pigz rhash (included in brew)
