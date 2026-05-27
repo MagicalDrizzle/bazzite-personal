@@ -36,8 +36,9 @@ dnf5 remove -y ptyxis
 # CoolerControl (Terra is real outdated)
 dnf5 copr enable -y codifryed/CoolerControl
 dnf5 install -y liquidctl
-dnf5 install -y coolercontrol coolercontrold --repo copr:copr.fedorainfracloud.org:codifryed:CoolerControl
-systemctl enable --now coolercontrold
+if dnf5 install -y coolercontrol coolercontrold --repo copr:copr.fedorainfracloud.org:codifryed:CoolerControl; then
+  systemctl enable --now coolercontrold
+fi
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:codifryed:CoolerControl.repo
 
 # nohang
