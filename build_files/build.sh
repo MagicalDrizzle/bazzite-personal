@@ -36,7 +36,14 @@ dnf5 remove -y ptyxis
 # CoolerControl (Terra is real outdated)
 dnf5 copr enable -y codifryed/CoolerControl
 dnf5 install -y liquidctl
-if dnf5 install -y coolercontrol coolercontrold --repo copr:copr.fedorainfracloud.org:codifryed:CoolerControl; then
+if ! dnf5 install -y coolercontrol coolercontrold --repo copr:copr.fedorainfracloud.org:codifryed:CoolerControl; then
+  if ! dnf5 install -y coolercontrol coolercontrold --repo terra; then
+    echo CoolerControl installation failed!
+    exit 0
+  else
+    systemctl enable --now coolercontrold
+  fi
+else
   systemctl enable --now coolercontrold
 fi
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:codifryed:CoolerControl.repo
@@ -112,6 +119,7 @@ dnf5 upgrade -y topgrade
 # Wavemon
 dnf5 copr enable -y ntulinux/wavemon
 dnf5 install -y wavemon
+sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:ntulinux:wavemon.repo
 
 # X11
 if ! dnf5 install -y plasma-workspace-x11; then
@@ -119,8 +127,8 @@ if ! dnf5 install -y plasma-workspace-x11; then
 fi
 
 # skip btdu, it causes trouble atm and i made a homebrew formula
-dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ \
-                android-tools usbview podman-compose pypy pypy3 \
+dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ kmscon \
+                android-tools usbview podman-compose \
                 cascadia-fonts-all playerctl \
                 kitty ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
                 rmlint cava vkmark iotop powertop below firejail earlyoom \
