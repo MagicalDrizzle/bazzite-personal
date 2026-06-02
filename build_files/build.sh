@@ -33,6 +33,13 @@ fi
 dnf5 remove -y ptyxis
 ###
 
+# Mullvad VPN
+dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/stable/mullvad.repo
+dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/beta/mullvad.repo --save-filename=mullvad-beta.repo
+dnf5 install -y mullvad-vpn --repo mullvad-beta
+systemctl enable mullvad-early-boot-blocking
+systemctl enable mullvad-daemon
+
 # CoolerControl (Terra is real outdated)
 dnf5 copr enable -y codifryed/CoolerControl
 dnf5 install -y liquidctl
@@ -41,10 +48,10 @@ if ! dnf5 install -y coolercontrol coolercontrold --repo copr:copr.fedorainfracl
     echo CoolerControl installation failed!
     exit 0
   else
-    systemctl enable --now coolercontrold
+    systemctl enable coolercontrold
   fi
 else
-  systemctl enable --now coolercontrold
+  systemctl enable coolercontrold
 fi
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:codifryed:CoolerControl.repo
 
