@@ -12,11 +12,12 @@ set -ouex pipefail
 # this installs a package from fedora repos
 
 # Create /nix for Nix
-mkdir /nix
+#mkdir /nix
+mkdir -p "/var/nix" && ln -s "/var/nix" "/nix"
 
+# PowerShell, VSCode
 #mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
 #mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
-# PowerShell, VSCode
 # Finally brew has powershell :3
 if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
     #dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/config/rhel/9/prod.repo --save-filename=microsoft-prod.repo
@@ -34,6 +35,7 @@ dnf5 remove -y ptyxis
 ###
 
 # Mullvad VPN
+mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
 dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/stable/mullvad.repo
 dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/beta/mullvad.repo --save-filename=mullvad-beta.repo
 dnf5 install -y mullvad-vpn --repo mullvad-beta
