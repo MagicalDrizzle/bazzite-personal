@@ -11,13 +11,16 @@ set -ouex pipefail
 
 # this installs a package from fedora repos
 
-# Create /nix for Nix
+# Create folders
+## Nix
 #mkdir /nix
 mkdir -p "/var/nix" && ln -s "/var/nix" "/nix"
+## PowerShell, Mullvad VPN, Sublime Text
+mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
+## PowerShell
+#mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
 
 # PowerShell, VSCode
-#mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
-#mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
 # Finally brew has powershell :3
 if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
     #dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/config/rhel/9/prod.repo --save-filename=microsoft-prod.repo
@@ -35,7 +38,6 @@ dnf5 remove -y ptyxis
 ###
 
 # Mullvad VPN
-mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
 dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/stable/mullvad.repo
 dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/beta/mullvad.repo --save-filename=mullvad-beta.repo
 dnf5 install -y mullvad-vpn --repo mullvad-beta
@@ -69,7 +71,6 @@ RS_NAME=${RS_VER:2:-1}
 dnf5 install -y https://download1.rstudio.org/electron/rhel9/x86_64/rstudio-${RS_NAME/+/-}-x86_64.rpm
 
 # Sublime Text
-mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
 rpm --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg
 dnf5 config-manager addrepo --from-repofile=https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo
 dnf5 download -y sublime-text
