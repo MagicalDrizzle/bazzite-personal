@@ -85,7 +85,7 @@ sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/sublime-text.repo
 # Tailscale
 # Repo file already included
 sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/tailscale.repo
-dnf5 install -y tailscale
+dnf5 install -y tailscale --repo=tailscale-stable
 sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/tailscale.repo
 
 # Beyond Compare
