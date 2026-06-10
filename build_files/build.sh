@@ -38,7 +38,7 @@ dnf5 remove -y ptyxis
 ###
 
 # jotta-cli
-sudo tee /etc/yum.repos.d/jotta-cli.repo > /dev/null <<'EOF'
+tee /etc/yum.repos.d/jotta-cli.repo > /dev/null <<'EOF'
 [jotta-cli]
 name=Jottacloud CLI
 enabled=0
