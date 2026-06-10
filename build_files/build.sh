@@ -29,13 +29,25 @@ if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
     #sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/microsoft-prod.repo
 
     dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/yumrepos/vscode/config.repo --save-filename=vscode.repo
-    dnf5 install -y code
+    dnf5 install -y code --repo=vscode-yum
     sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/vscode.repo
 fi
 
 ### Remove packages
 dnf5 remove -y ptyxis
 ###
+
+# jotta-cli
+sudo tee /etc/yum.repos.d/jotta-cli.repo > /dev/null <<'EOF'
+[jotta-cli]
+name=Jottacloud CLI
+enabled=0
+baseurl=https://repo.jotta.cloud/redhat
+gpgcheck=1
+gpgkey=https://repo.jotta.cloud/public.gpg
+EOF
+dnf5 install -y jotta-cli --repo=jotta-cli
+
 
 # Mullvad VPN
 dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/stable/mullvad.repo
@@ -70,13 +82,10 @@ RS_VER=$(curl -sL https://api.github.com/repos/rstudio/rstudio/tags | jq .[0].na
 RS_NAME=${RS_VER:2:-1}
 dnf5 install -y https://download1.rstudio.org/electron/rhel9/x86_64/rstudio-${RS_NAME/+/-}-x86_64.rpm
 
-# Sublime Text
-rpm --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg
-dnf5 config-manager addrepo --from-repofile=https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo
-dnf5 download -y sublime-text
-rpm -i --nodigest sublime-text-*.rpm
-rm sublime-text-*.rpm
-sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/sublime-text.repo
+# Sublime Text (now has flatpak!)
+#dnf5 config-manager addrepo --from-repofile=https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo
+#dnf5 install -y sublime-text --repo=sublime-text
+#sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/sublime-text.repo
 
 # Portmaster
 #PM_VER=$(curl -sL https://api.github.com/repos/safing/portmaster/releases/latest | jq .tag_name)
