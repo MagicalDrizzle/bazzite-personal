@@ -11,6 +11,17 @@ set -ouex pipefail
 
 # this installs a package from fedora repos
 
+# Boilerplate
+fedora_ver=$(rpm -E %fedora)
+
+repo-enable() {
+    [ -f "$1" ] && sed -zi 's@enabled=0@enabled=1@' "$1"
+}
+
+repo-disable() {
+    [ -f "$1" ] && sed -zi 's@enabled=1@enabled=0@' "$1"
+}
+
 # Create folders
 ## Nix
 #mkdir /nix
@@ -26,11 +37,11 @@ if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
     #dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/config/rhel/9/prod.repo --save-filename=microsoft-prod.repo
     #dnf5 install -y powershell
     # dnf5 install -y https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-1.rh.x86_64.rpm
-    #sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/microsoft-prod.repo
+    #repo-disable /etc/yum.repos.d/microsoft-prod.repo
 
     dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/yumrepos/vscode/config.repo --save-filename=vscode.repo
     dnf5 install -y code --repo=vscode-yum
-    sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/vscode.repo
+    repo-disable /etc/yum.repos.d/vscode.repo
 fi
 
 ### Remove packages
@@ -69,7 +80,7 @@ if ! dnf5 install -y coolercontrol coolercontrold --repo copr:copr.fedorainfracl
 else
   systemctl enable coolercontrold
 fi
-sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:codifryed:CoolerControl.repo
+repo-disable /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:codifryed:CoolerControl.repo
 
 # nohang
 dnf5 install -y https://github.com/MagicalDrizzle/misc-binaries/raw/refs/heads/main/nohang-0.3.0-5.fc42.noarch.rpm \
@@ -80,12 +91,12 @@ systemctl mask systemd-oomd
 # RStudio
 RS_VER=$(curl -sL https://api.github.com/repos/rstudio/rstudio/tags | jq .[0].name)
 RS_NAME=${RS_VER:2:-1}
-dnf5 install -y https://download1.rstudio.org/electron/rhel9/x86_64/rstudio-${RS_NAME/+/-}-x86_64.rpm
+dnf5 install -y https://download1.rstudio.org/electron/rhel9/x86_64/rstudio-"${RS_NAME/+/-}"-x86_64.rpm
 
 # Sublime Text (now has flatpak!)
 #dnf5 config-manager addrepo --from-repofile=https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo
 #dnf5 install -y sublime-text --repo=sublime-text
-#sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/sublime-text.repo
+#repo-disable /etc/yum.repos.d/sublime-text.repo
 
 # Portmaster
 #PM_VER=$(curl -sL https://api.github.com/repos/safing/portmaster/releases/latest | jq .tag_name)
@@ -93,43 +104,42 @@ dnf5 install -y https://download1.rstudio.org/electron/rhel9/x86_64/rstudio-${RS
 
 # Tailscale
 # Repo file already included
-sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/tailscale.repo
+repo-enable /etc/yum.repos.d/tailscale.repo
 dnf5 install -y tailscale --repo=tailscale-stable
-sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/tailscale.repo
+repo-disable /etc/yum.repos.d/tailscale.repo
 
 # Beyond Compare
 dnf5 config-manager addrepo --from-repofile=https://www.scootersoftware.com/scootersoftware.repo
 dnf5 install -y bcompare
-sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/scootersoftware.repo
+repo-disable /etc/yum.repos.d/scootersoftware.repo
 
 # VirtIO paravirtualization drivers for Windows
 dnf5 config-manager addrepo --from-repofile=https://fedorapeople.org/groups/virt/virtio-win/virtio-win.repo
 # dnf5 install -y virtio-win        # you can get ISOs easily
-sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/virtio-win.repo
+repo-disable /etc/yum.repos.d/virtio-win.repo
 
 # Syncthing Tray
-fedora_ver=$(rpm -E %fedora)
-dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_$fedora_ver/home:mkittler.repo
+dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_"$fedora_ver"/home:mkittler.repo
 dnf5 install -y syncthingtray-qt6 syncthingplasmoid-qt6 syncthingfileitemaction-qt6 syncthingctl-qt6
-sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/home:mkittler.repo
+repo-disable /etc/yum.repos.d/home:mkittler.repo
 
 # Faugus Launcher
 dnf5 -y copr enable faugus/faugus-launcher
 dnf5 -y install faugus-launcher
-sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:faugus:faugus-launcher.repo
+repo-disable /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:faugus:faugus-launcher.repo
 
 # Adoptium Temurin JDK
 dnf5 install -y adoptium-temurin-java-repository
-sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/adoptium-temurin-java-repository.repo
+repo-enable /etc/yum.repos.d/adoptium-temurin-java-repository.repo
 dnf5 install -y temurin-25-jdk
 
 # Other softwares
 echo defaultyes=True | tee -a /etc/dnf/dnf.conf
 # Enable Terra
-sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/terra.repo
-sed -zi 's@enabled=0@enabled=1@' /etc/yum.repos.d/terra-extras.repo
+repo-enable /etc/yum.repos.d/terra.repo
+repo-enable /etc/yum.repos.d/terra-extras.repo
 # Enable RPM Fusion
-dnf5 install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$fedora_ver.noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$fedora_ver.noarch.rpm
+dnf5 install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-"$fedora_ver".noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$fedora_ver.noarch.rpm
 dnf5 config-manager setopt fedora-cisco-openh264.enabled=1
 dnf5 config-manager setopt rpmfusion-free.enabled=1 rpmfusion-free-updates.enabled=1 rpmfusion-nonfree.enabled=1 rpmfusion-nonfree-updates.enabled=1
 # Topgrade
@@ -138,7 +148,13 @@ dnf5 upgrade -y topgrade
 # Wavemon
 dnf5 copr enable -y ntulinux/wavemon
 dnf5 install -y wavemon
-sed -zi 's@enabled=1@enabled=0@' /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:ntulinux:wavemon.repo
+repo-disable /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:ntulinux:wavemon.repo
+
+# kmscon
+dnf5 copr enable -y jfalempe/kmscon
+dnf5 install -y kmscon kmscon-freetype kmscon-gl kmscon-pango --repo=copr:copr.fedorainfracloud.org:jfalempe:kmscon
+ln -sf /usr/lib/systemd/system/kmsconvt@.service /etc/systemd/system/autovt@.service
+repo-disable /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:jfalempe:kmscon.repo
 
 # X11
 if ! dnf5 install -y plasma-workspace-x11; then
@@ -147,7 +163,6 @@ fi
 
 # skip btdu, it causes trouble atm and i made a homebrew formula
 dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ \
-                kmscon kmscon-freetype kmscon-gl kmscon-pango \
                 android-tools usbview podman-compose \
                 cascadia-fonts-all playerctl \
                 kitty ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
