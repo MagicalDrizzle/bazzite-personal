@@ -162,7 +162,7 @@ if ! dnf5 install -y plasma-workspace-x11; then
 fi
 
 # skip btdu, it causes trouble atm and i made a homebrew formula
-dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ \
+dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ dosfstools mtools \
                 android-tools usbview podman-compose \
                 cascadia-fonts-all playerctl \
                 kitty ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
