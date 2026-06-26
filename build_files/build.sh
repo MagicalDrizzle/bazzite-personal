@@ -61,7 +61,7 @@ dnf5 install -y jotta-cli --repo=jotta-cli
 
 
 # Mullvad VPN
-dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/stable/mullvad.repo
+dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/stable/mullvad.repo --save-filename=mullvad-stable.repo
 dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/beta/mullvad.repo --save-filename=mullvad-beta.repo
 dnf5 install -y mullvad-vpn --repo mullvad-stable
 systemctl enable mullvad-early-boot-blocking
