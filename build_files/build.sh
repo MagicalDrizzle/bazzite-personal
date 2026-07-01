@@ -27,7 +27,7 @@ repo-disable() {
 #mkdir /nix
 mkdir -p "/var/nix" && ln -s "/var/nix" "/nix"
 ## PowerShell, Mullvad VPN, Sublime Text
-mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
+#mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
 ## PowerShell
 #mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
 
@@ -59,13 +59,45 @@ gpgkey=https://repo.jotta.cloud/public.gpg
 EOF
 dnf5 install -y jotta-cli --repo=jotta-cli
 
+# ProtonVPN
+tee /etc/yum.repos.d/protonvpn-stable.repo > /dev/null <<'EOF'
+# ProtonVPN stable release
+[protonvpn-fedora-stable]
+name = ProtonVPN Fedora Stable repository
+baseurl = https://repo.protonvpn.com/fedora-$releasever-stable
+enabled = 0
+gpgcheck = 1
+repo_gpgcheck=0
+skip_if_unavailable=true
+gpgkey = https://repo.protonvpn.com/fedora-$releasever-stable/public_key.asc
+EOF
+
+tee /etc/yum.repos.d/protonvpn-beta.repo > /dev/null <<'EOF'
+# ProtonVPN unstable release
+[protonvpn-fedora-unstable]
+name = ProtonVPN Fedora Beta repository
+baseurl = https://repo.protonvpn.com/fedora-$releasever-unstable
+enabled = 1
+gpgcheck = 1
+repo_gpgcheck=0
+skip_if_unavailable=true
+gpgkey = https://repo.protonvpn.com/fedora-$releasever-unstable/public_key.asc
+EOF
+
+dnf5 install -y proton-vpn-cli proton-vpn-gtk-app --repo=protonvpn-fedora-unstable
 
 # Mullvad VPN
-dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/stable/mullvad.repo --save-filename=mullvad-stable.repo
-dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/beta/mullvad.repo --save-filename=mullvad-beta.repo
-dnf5 install -y mullvad-vpn --repo mullvad-stable
-systemctl enable mullvad-early-boot-blocking
-systemctl enable mullvad-daemon
+# Awful CEO donated money to not very nice party...
+# https://www.flamman.se/techprofil-ger-miljoner-till-orebropartiet/
+#---# https://archive.is/FUhzn
+# https://www.reddit.com/r/degoogle/comments/1ug25ag/for_those_thinking_of_switching_to_mullvad_from/
+#---# https://archive.is/wip/cBqc6
+#---# https://archive.is/wip/mh6nH
+#dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/stable/mullvad.repo --save-filename=mullvad-stable.repo
+#dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/beta/mullvad.repo --save-filename=mullvad-beta.repo
+#dnf5 install -y mullvad-vpn --repo mullvad-stable
+#systemctl enable mullvad-early-boot-blocking
+#systemctl enable mullvad-daemon
 
 # CoolerControl (Terra is real outdated)
 dnf5 copr enable -y codifryed/CoolerControl
