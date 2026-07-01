@@ -41,7 +41,7 @@ if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
 
     dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/yumrepos/vscode/config.repo --save-filename=vscode.repo
     dnf5 install -y code --repo=vscode-yum
-    repo-disable /etc/yum.repos.d/vscode.repo
+    dnf5 config-manager disable vscode-yum
 fi
 
 ### Remove packages
@@ -58,6 +58,7 @@ gpgcheck=1
 gpgkey=https://repo.jotta.cloud/public.gpg
 EOF
 dnf5 install -y jotta-cli --repo=jotta-cli
+dnf5 config-manager disable jotta-cli
 
 # ProtonVPN
 tee /etc/yum.repos.d/protonvpn-stable.repo > /dev/null <<'EOF'
@@ -85,6 +86,8 @@ gpgkey = https://repo.protonvpn.com/fedora-$releasever-unstable/public_key.asc
 EOF
 
 dnf5 install -y proton-vpn-cli proton-vpn-gtk-app --repo=protonvpn-fedora-stable
+dnf5 config-manager disable protonvpn-fedora-stable
+dnf5 config-manager disable protonvpn-fedora-unstable
 
 # Mullvad VPN
 # Awful CEO donated money to not very nice party...
@@ -112,7 +115,7 @@ if ! dnf5 install -y coolercontrol coolercontrold --repo copr:copr.fedorainfracl
 else
   systemctl enable coolercontrold
 fi
-repo-disable /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:codifryed:CoolerControl.repo
+dnf5 config-manager disable copr:copr.fedorainfracloud.org:codifryed:CoolerControl
 
 # nohang
 dnf5 install -y https://github.com/MagicalDrizzle/misc-binaries/raw/refs/heads/main/nohang-0.3.0-5.fc42.noarch.rpm \
@@ -136,57 +139,57 @@ dnf5 install -y https://download1.rstudio.org/electron/rhel9/x86_64/rstudio-"${R
 
 # Tailscale
 # Repo file already included
-repo-enable /etc/yum.repos.d/tailscale.repo
-dnf5 install -y tailscale --repo=tailscale-stable
 repo-disable /etc/yum.repos.d/tailscale.repo
+dnf5 config-manager disable tailscale-stable
 
 # Beyond Compare
 dnf5 config-manager addrepo --from-repofile=https://www.scootersoftware.com/scootersoftware.repo
 dnf5 install -y bcompare
-repo-disable /etc/yum.repos.d/scootersoftware.repo
+dnf5 config-manager disable scootersoftware
 
 # VirtIO paravirtualization drivers for Windows
 dnf5 config-manager addrepo --from-repofile=https://fedorapeople.org/groups/virt/virtio-win/virtio-win.repo
 # dnf5 install -y virtio-win        # you can get ISOs easily
-repo-disable /etc/yum.repos.d/virtio-win.repo
+dnf5 config-manager disable virtio-win-stable virtio-win-latest virtio-win-source
 
 # Syncthing Tray
 dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_"$fedora_ver"/home:mkittler.repo
 dnf5 install -y syncthingtray-qt6 syncthingplasmoid-qt6 syncthingfileitemaction-qt6 syncthingctl-qt6
-repo-disable /etc/yum.repos.d/home:mkittler.repo
+dnf5 config-manager disable home_mkittler
 
 # Faugus Launcher
 dnf5 -y copr enable faugus/faugus-launcher
 dnf5 -y install faugus-launcher
-repo-disable /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:faugus:faugus-launcher.repo
+dnf5 config-manager disable copr:copr.fedorainfracloud.org:faugus:faugus-launcher
+
 
 # Adoptium Temurin JDK
 dnf5 install -y adoptium-temurin-java-repository
-repo-enable /etc/yum.repos.d/adoptium-temurin-java-repository.repo
+dnf5 config-manager enable adoptium-temurin-java-repository
 dnf5 install -y temurin-25-jdk
 
 # Other softwares
 echo defaultyes=True | tee -a /etc/dnf/dnf.conf
 # Enable Terra
-repo-enable /etc/yum.repos.d/terra.repo
-repo-enable /etc/yum.repos.d/terra-extras.repo
+dnf5 config-manager enable terra
+dnf5 config-manager enable terra-extras
 # Enable RPM Fusion
 dnf5 install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-"$fedora_ver".noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-"$fedora_ver".noarch.rpm
-dnf5 config-manager setopt fedora-cisco-openh264.enabled=1
-dnf5 config-manager setopt rpmfusion-free.enabled=1 rpmfusion-free-updates.enabled=1 rpmfusion-nonfree.enabled=1 rpmfusion-nonfree-updates.enabled=1
+dnf5 config-manager enable fedora-cisco-openh264
+dnf5 config-manager enable rpmfusion-free rpmfusion-free-updates rpmfusion-nonfree rpmfusion-nonfree-updates
 # Topgrade
 dnf5 config-manager setopt terra.exclude='nerd-fonts scx-scheds steam python3-protobuf' terra-extras.exclude='nerd-fonts scx-scheds steam python3-protobuf'
 dnf5 upgrade -y topgrade
 # Wavemon
 dnf5 copr enable -y ntulinux/wavemon
 dnf5 install -y wavemon
-repo-disable /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:ntulinux:wavemon.repo
+dnf5 config-manager disable copr:copr.fedorainfracloud.org:ntulinux:wavemon
 
 # kmscon
 dnf5 copr enable -y jfalempe/kmscon
 dnf5 install -y kmscon kmscon-freetype kmscon-gl kmscon-pango --repo=copr:copr.fedorainfracloud.org:jfalempe:kmscon
 ln -sf /usr/lib/systemd/system/kmsconvt@.service /etc/systemd/system/autovt@.service
-repo-disable /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:jfalempe:kmscon.repo
+dnf5 config-manager disable copr:copr.fedorainfracloud.org:jfalempe:kmscon
 
 # X11
 if ! dnf5 install -y plasma-workspace-x11; then
