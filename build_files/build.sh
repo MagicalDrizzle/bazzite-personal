@@ -40,7 +40,7 @@ if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
     #repo-disable /etc/yum.repos.d/microsoft-prod.repo
 
     dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/yumrepos/vscode/config.repo --save-filename=vscode.repo
-    dnf5 install -y code --repo=vscode-yum
+    dnf5 install -y code --repo vscode-yum
     dnf5 config-manager disable vscode-yum
 fi
 
@@ -57,40 +57,11 @@ baseurl=https://repo.jotta.cloud/redhat
 gpgcheck=1
 gpgkey=https://repo.jotta.cloud/public.gpg
 EOF
-dnf5 install -y jotta-cli --repo=jotta-cli
+dnf5 install -y jotta-cli --repo jotta-cli
 dnf5 config-manager disable jotta-cli
 
 # ProtonVPN
-# Official repo doesn't work...?
-tee /etc/yum.repos.d/protonvpn-stable.repo > /dev/null <<'EOF'
-# ProtonVPN stable release
-[protonvpn-fedora-stable]
-name = ProtonVPN Fedora Stable repository
-baseurl = https://repo.protonvpn.com/fedora-$releasever-stable
-enabled = 0
-gpgcheck = 1
-repo_gpgcheck=0
-skip_if_unavailable=true
-gpgkey = https://repo.protonvpn.com/fedora-$releasever-stable/public_key.asc
-EOF
-
-tee /etc/yum.repos.d/protonvpn-beta.repo > /dev/null <<'EOF'
-# ProtonVPN unstable release
-[protonvpn-fedora-unstable]
-name = ProtonVPN Fedora Beta repository
-baseurl = https://repo.protonvpn.com/fedora-$releasever-unstable
-enabled = 1
-gpgcheck = 1
-repo_gpgcheck=0
-skip_if_unavailable=true
-gpgkey = https://repo.protonvpn.com/fedora-$releasever-unstable/public_key.asc
-EOF
-
-if ! dnf5 install -y proton-vpn-cli proton-vpn-gtk-app --repo=protonvpn-fedora-stable; then
-  dnf5 install -y proton-vpn-cli proton-vpn-gtk-app --repo=terra
-fi
-dnf5 config-manager disable protonvpn-fedora-stable
-dnf5 config-manager disable protonvpn-fedora-unstable
+dnf5 install -y proton-vpn-cli proton-vpn-gtk-app --repo terra
 
 # Mullvad VPN
 # Awful CEO donated money to not very nice party...
@@ -133,7 +104,7 @@ dnf5 install -y https://download1.rstudio.org/electron/rhel9/x86_64/rstudio-"${R
 
 # Sublime Text (now has flatpak!)
 #dnf5 config-manager addrepo --from-repofile=https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo
-#dnf5 install -y sublime-text --repo=sublime-text
+#dnf5 install -y sublime-text --repo sublime-text
 #repo-disable /etc/yum.repos.d/sublime-text.repo
 
 # Portmaster
@@ -190,7 +161,7 @@ dnf5 config-manager disable copr:copr.fedorainfracloud.org:ntulinux:wavemon
 
 # kmscon
 dnf5 copr enable -y jfalempe/kmscon
-dnf5 install -y kmscon kmscon-freetype kmscon-gl kmscon-pango --repo=copr:copr.fedorainfracloud.org:jfalempe:kmscon
+dnf5 install -y kmscon kmscon-freetype kmscon-gl kmscon-pango --repo copr:copr.fedorainfracloud.org:jfalempe:kmscon
 ln -sf /usr/lib/systemd/system/kmsconvt@.service /etc/systemd/system/autovt@.service
 dnf5 config-manager disable copr:copr.fedorainfracloud.org:jfalempe:kmscon
 
