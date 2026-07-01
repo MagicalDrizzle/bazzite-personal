@@ -61,6 +61,7 @@ dnf5 install -y jotta-cli --repo=jotta-cli
 dnf5 config-manager disable jotta-cli
 
 # ProtonVPN
+# Official repo doesn't work...?
 tee /etc/yum.repos.d/protonvpn-stable.repo > /dev/null <<'EOF'
 # ProtonVPN stable release
 [protonvpn-fedora-stable]
@@ -85,7 +86,9 @@ skip_if_unavailable=true
 gpgkey = https://repo.protonvpn.com/fedora-$releasever-unstable/public_key.asc
 EOF
 
-dnf5 install -y proton-vpn-cli proton-vpn-gtk-app --repo=protonvpn-fedora-stable
+if ! dnf5 install -y proton-vpn-cli proton-vpn-gtk-app --repo=protonvpn-fedora-stable; then
+  dnf5 install -y proton-vpn-cli proton-vpn-gtk-app --repo=terra
+fi
 dnf5 config-manager disable protonvpn-fedora-stable
 dnf5 config-manager disable protonvpn-fedora-unstable
 
