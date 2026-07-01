@@ -54,9 +54,14 @@ dnf5 config-manager disable jotta-cli
 
 # ProtonVPN
 dnf5 install -y https://repo.protonvpn.com/fedora-"$fedora_ver"-stable/protonvpn-stable-release/protonvpn-stable-release-1.0.4-1.noarch.rpm
-
-dnf5 install -y proton-vpn-gnome-desktop
-dnf5 install -y proton-vpn-cli
+if ! dnf5 install -y proton-vpn-gnome-desktop; then
+  echo DEBUG: proton-vpn-gnome-desktop FAILED
+  exit 0
+fi
+if ! dnf5 install -y proton-vpn-cli; then
+  echo DEBUG: proton-vpn-cli FAILED
+  exit 0
+fi
 dnf5 config-manager disable protonvpn-fedora-stable
 
 # Mullvad VPN
@@ -163,6 +168,7 @@ dnf5 config-manager disable copr:copr.fedorainfracloud.org:jfalempe:kmscon
 
 # X11
 if ! dnf5 install -y plasma-workspace-x11; then
+    echo "DEBUG: plasma-workspace-x11 FAILED"
     exit 0
 fi
 
