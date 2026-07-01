@@ -14,14 +14,6 @@ set -ouex pipefail
 # Boilerplate
 fedora_ver=$(rpm -E %fedora)
 
-repo-enable() {
-    [ -f "$1" ] && sed -zi 's@enabled=0@enabled=1@' "$1"
-}
-
-repo-disable() {
-    [ -f "$1" ] && sed -zi 's@enabled=1@enabled=0@' "$1"
-}
-
 # Create folders
 ## Nix
 #mkdir /nix
@@ -61,9 +53,10 @@ dnf5 install -y jotta-cli --repo jotta-cli
 dnf5 config-manager disable jotta-cli
 
 # ProtonVPN
-dnf5 install -y https://repo.protonvpn.com/fedora-$(cat /etc/fedora-release | cut -d' ' -f 3)-stable/protonvpn-stable-release/protonvpn-stable-release-1.0.4-1.noarch.rpm
+dnf5 install -y https://repo.protonvpn.com/fedora-"$fedora_ver"-stable/protonvpn-stable-release/protonvpn-stable-release-1.0.4-1.noarch.rpm
 
-dnf5 install -y proton-vpn-gnome-desktop proton-vpn-cli --repo protonvpn-fedora-stable
+dnf5 install -y proton-vpn-gnome-desktop
+dnf5 install -y proton-vpn-cli
 dnf5 config-manager disable protonvpn-fedora-stable
 
 # Mullvad VPN
