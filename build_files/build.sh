@@ -84,7 +84,7 @@ skip_if_unavailable=true
 gpgkey = https://repo.protonvpn.com/fedora-$releasever-unstable/public_key.asc
 EOF
 
-dnf5 install -y proton-vpn-cli proton-vpn-gtk-app --repo=protonvpn-fedora-unstable
+dnf5 install -y proton-vpn-cli proton-vpn-gtk-app --repo=protonvpn-fedora-stable
 
 # Mullvad VPN
 # Awful CEO donated money to not very nice party...
