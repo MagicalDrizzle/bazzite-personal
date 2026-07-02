@@ -24,7 +24,10 @@ FROM ghcr.io/ublue-os/bazzite:stable
 ## Uncomment the following line if one desires to make /opt immutable and be able to be used
 ## by the package manager.
 
-# RUN rm /opt && mkdir /opt
+RUN rm /opt && mkdir /opt
+
+# Personal, for Nix/Lix
+RUN mkdir -p /var/nix && ln -s /var/nix /nix
 
 ### MODIFICATIONS
 ## make modifications desired in your image and install packages by modifying the build.sh script

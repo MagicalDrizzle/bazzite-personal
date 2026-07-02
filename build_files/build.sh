@@ -22,15 +22,6 @@ cp -avf "/ctx/system_files"/. /
 # `x || :` == `x || true` to ignore command failure
 fedora_ver=$(rpm -E %fedora)    # 42, 43, 44...
 
-# Create folders
-## Lix
-#mkdir /nix
-#mkdir -p "/var/nix" && ln -s "/var/nix" "/nix"
-## PowerShell, Mullvad VPN, Sublime Text
-#mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
-## PowerShell
-#mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
-
 # PowerShell, VSCode
 # Finally brew has powershell :3
 if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
