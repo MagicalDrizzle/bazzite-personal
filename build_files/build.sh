@@ -13,8 +13,185 @@ cp -avf "/ctx/system_files"/. /
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
 # this installs a package from fedora repos
-dnf5 install -y tmux
+#dnf5 install -y tmux
 
+################----PERSONAL-START----################
+
+# Boilerplate
+# `:` == `true`
+# `x || :` == `x || true` to ignore command failure
+fedora_ver=$(rpm -E %fedora)    # 42, 43, 44...
+
+# Create folders
+## Lix
+#mkdir /nix
+#mkdir -p "/var/nix" && ln -s "/var/nix" "/nix"
+## PowerShell, Mullvad VPN, Sublime Text
+#mkdir -p "/var/opt" && ln -s "/var/opt" "/opt"
+## PowerShell
+#mkdir -p "/var/usrlocal" && ln -s "/var/usrlocal" "/usr/local"
+
+# PowerShell, VSCode
+# Finally brew has powershell :3
+if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
+    #dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/config/rhel/9/prod.repo --save-filename=microsoft-prod.repo
+    #dnf5 install -y powershell
+    # dnf5 install -y https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-1.rh.x86_64.rpm
+
+    dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/yumrepos/vscode/config.repo --save-filename=vscode.repo
+    dnf5 install -y code --repo=vscode-yum
+    dnf5 config-manager disable vscode-yum
+fi
+
+### Remove packages
+
+###
+
+# jotta-cli
+tee /etc/yum.repos.d/jotta-cli.repo > /dev/null <<'EOF'
+[jotta-cli]
+name=Jottacloud CLI
+enabled=0
+baseurl=https://repo.jotta.cloud/redhat
+gpgcheck=1
+gpgkey=https://repo.jotta.cloud/public.gpg
+EOF
+dnf5 install -y jotta-cli --repo=jotta-cli
+dnf5 config-manager disable jotta-cli
+
+# ProtonVPN
+dnf5 install -y https://repo.protonvpn.com/fedora-"$fedora_ver"-stable/protonvpn-stable-release/protonvpn-stable-release-1.0.4-1.noarch.rpm
+if ! dnf5 install -y proton-vpn-gnome-desktop; then
+  echo "DEBUG: proton-vpn-gnome-desktop FAILED"
+fi
+if ! dnf5 install -y proton-vpn-cli; then
+  echo "DEBUG: proton-vpn-cli FAILED"
+fi
+dnf5 config-manager disable protonvpn-fedora-stable
+
+# Mullvad VPN
+# Awful CEO donated money to not very nice party...
+# https://www.flamman.se/techprofil-ger-miljoner-till-orebropartiet/
+#---# https://archive.is/FUhzn
+# https://www.reddit.com/r/degoogle/comments/1ug25ag/for_those_thinking_of_switching_to_mullvad_from/
+#---# https://archive.is/wip/cBqc6
+#---# https://archive.is/wip/mh6nH
+#dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/stable/mullvad.repo --save-filename=mullvad-stable.repo
+#dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/beta/mullvad.repo --save-filename=mullvad-beta.repo
+#dnf5 install -y mullvad-vpn --repo=mullvad-stable
+#systemctl enable mullvad-early-boot-blocking
+#systemctl enable mullvad-daemon
+
+# CoolerControl (Terra is real outdated)
+dnf5 copr enable -y codifryed/CoolerControl
+dnf5 install -y liquidctl
+if ! dnf5 install -y coolercontrol coolercontrold --repo=copr:copr.fedorainfracloud.org:codifryed:CoolerControl; then
+  if ! dnf5 install -y coolercontrol coolercontrold --repo=terra; then
+    echo CoolerControl installation failed!
+  else
+    systemctl enable coolercontrold
+  fi
+else
+  systemctl enable coolercontrold
+fi
+dnf5 config-manager disable copr:copr.fedorainfracloud.org:codifryed:CoolerControl
+
+# nohang
+dnf5 install -y https://github.com/MagicalDrizzle/misc-binaries/raw/refs/heads/main/nohang-0.3.0-5.fc42.noarch.rpm \
+https://github.com/MagicalDrizzle/misc-binaries/raw/refs/heads/main/nohang-desktop-0.3.0-5.fc42.noarch.rpm
+systemctl enable nohang-desktop
+systemctl mask systemd-oomd
+
+# RStudio
+RS_VER=$(curl -sL https://api.github.com/repos/rstudio/rstudio/tags | jq .[0].name)
+RS_NAME=${RS_VER:2:-1}
+dnf5 install -y https://download1.rstudio.org/electron/rhel9/x86_64/rstudio-"${RS_NAME/+/-}"-x86_64.rpm
+
+# Sublime Text (now has flatpak!)
+#dnf5 config-manager addrepo --from-repofile=https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo
+#dnf5 install -y sublime-text --repo=sublime-text
+#repo-disable /etc/yum.repos.d/sublime-text.repo
+
+# Portmaster
+#PM_VER=$(curl -sL https://api.github.com/repos/safing/portmaster/releases/latest | jq .tag_name)
+#dnf5 install -y https://updates.safing.io/latest/linux_amd64/packages/Portmaster-${PM_VER:2:-1}-1.x86_64.rpm
+
+# Tailscale
+# Repo file already included
+dnf5 install -y tailscale --repo=tailscale-stable
+dnf5 config-manager disable tailscale-stable
+
+# Beyond Compare
+dnf5 config-manager addrepo --from-repofile=https://www.scootersoftware.com/scootersoftware.repo
+dnf5 install -y bcompare
+dnf5 config-manager disable scootersoftware
+
+# VirtIO paravirtualization drivers for Windows
+dnf5 config-manager addrepo --from-repofile=https://fedorapeople.org/groups/virt/virtio-win/virtio-win.repo
+# dnf5 install -y virtio-win        # you can get ISOs easily
+dnf5 config-manager disable virtio-win-stable virtio-win-latest virtio-win-source
+
+# Syncthing Tray
+dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_"$fedora_ver"/home:mkittler.repo
+dnf5 install -y syncthingtray-qt6 syncthingplasmoid-qt6 syncthingfileitemaction-qt6 syncthingctl-qt6
+dnf5 config-manager disable home_mkittler
+
+# Faugus Launcher
+dnf5 -y copr enable faugus/faugus-launcher
+dnf5 -y install faugus-launcher
+dnf5 config-manager disable copr:copr.fedorainfracloud.org:faugus:faugus-launcher
+
+# Adoptium Temurin JDK
+dnf5 install -y adoptium-temurin-java-repository
+dnf5 config-manager enable adoptium-temurin-java-repository
+dnf5 install -y temurin-25-jdk
+
+# Other softwares
+echo defaultyes=True | tee -a /etc/dnf/dnf.conf
+# Enable Terra
+dnf5 config-manager enable terra
+dnf5 config-manager enable terra-extras
+# Enable RPM Fusion
+dnf5 install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-"$fedora_ver".noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-"$fedora_ver".noarch.rpm
+dnf5 config-manager enable fedora-cisco-openh264
+dnf5 config-manager enable rpmfusion-free rpmfusion-free-updates rpmfusion-nonfree rpmfusion-nonfree-updates
+# Topgrade
+dnf5 config-manager setopt terra.exclude='nerd-fonts scx-scheds steam python3-protobuf' terra-extras.exclude='nerd-fonts scx-scheds steam python3-protobuf'
+dnf5 upgrade -y topgrade
+# Wavemon
+dnf5 copr enable -y ntulinux/wavemon
+dnf5 install -y wavemon
+dnf5 config-manager disable copr:copr.fedorainfracloud.org:ntulinux:wavemon
+
+# kmscon
+dnf5 copr enable -y jfalempe/kmscon
+dnf5 install -y kmscon kmscon-freetype kmscon-gl kmscon-pango --repo=copr:copr.fedorainfracloud.org:jfalempe:kmscon
+ln -sf /usr/lib/systemd/system/kmsconvt@.service /etc/systemd/system/autovt@.service
+dnf5 config-manager disable copr:copr.fedorainfracloud.org:jfalempe:kmscon
+
+# X11
+if ! dnf5 install -y plasma-workspace-x11; then
+    echo "DEBUG: plasma-workspace-x11 FAILED"
+fi
+
+# skip btdu, it causes trouble atm and i made a homebrew formula
+dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ \
+                android-tools usbview podman-compose \
+                playerctl \
+                kitty ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
+                rmlint cava vkmark iotop powertop below firejail earlyoom \
+                hardinfo2 sysbench iperf3 \
+                lxqt-admin pcmanfm-qt zswap-cli qt5ct qt6ct \
+                pandoc pandoc-pdf weasyprint cups-pdf \
+                android-udev-rules chkconfig cpuinfo plocate
+                # cmake fakeroot mujs patch pigz rhash (included in brew)
+                # systemd-standalone-shutdown (incompatible with systemd)
+
+# we have bazaar...?
+#dnf5 install -y --setopt=install_weak_deps=False plasma-discover plasma-discover-flatpak plasma-discover-kns
+
+
+################----PERSONAL-END----################
 # Use a COPR Example:
 #
 # dnf5 -y copr enable ublue-os/staging
@@ -24,4 +201,4 @@ dnf5 install -y tmux
 
 #### Example for enabling a System Unit File
 
-systemctl enable podman.socket
+#systemctl enable podman.socket
