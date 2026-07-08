@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2310
 
 set -ouex pipefail
 
@@ -21,10 +22,19 @@ cp -avf "/ctx/system_files"/. /
 # `:` == `true`
 # `x || :` == `x || true` to ignore command failure
 fedora_ver=$(rpm -E %fedora)    # 42, 43, 44...
+ignore_error() {
+    if "$@"; then
+        return 0
+    else
+        local rc=$?
+        echo "DEBUG: command failed (${rc}): $*"
+        return "${rc}"
+    fi
+}
 
 # PowerShell, VSCode
 # Finally brew has powershell :3
-if rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
+if ignore_error rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
     #dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/config/rhel/9/prod.repo --save-filename=microsoft-prod.repo
     #dnf5 install -y powershell
     # dnf5 install -y https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-1.rh.x86_64.rpm
@@ -51,13 +61,8 @@ dnf5 install -y jotta-cli --repo=jotta-cli
 dnf5 config-manager disable jotta-cli
 
 # ProtonVPN
-dnf5 install -y https://repo.protonvpn.com/fedora-"$fedora_ver"-stable/protonvpn-stable-release/protonvpn-stable-release-1.0.4-1.noarch.rpm
-if ! dnf5 install -y proton-vpn-gnome-desktop; then
-  echo "DEBUG: proton-vpn-gnome-desktop FAILED"
-fi
-if ! dnf5 install -y proton-vpn-cli; then
-  echo "DEBUG: proton-vpn-cli FAILED"
-fi
+dnf5 install -y https://repo.protonvpn.com/fedora-"${fedora_ver}"-stable/protonvpn-stable-release/protonvpn-stable-release-1.0.4-1.noarch.rpm
+ignore_error dnf5 install -y proton-vpn-gnome-desktop proton-vpn-cli --repo=protonvpn-fedora-stable
 dnf5 config-manager disable protonvpn-fedora-stable
 
 # Mullvad VPN
@@ -76,13 +81,9 @@ dnf5 config-manager disable protonvpn-fedora-stable
 # CoolerControl (Terra is real outdated)
 dnf5 copr enable -y codifryed/CoolerControl
 dnf5 install -y liquidctl
-if ! dnf5 install -y coolercontrol coolercontrold --repo=copr:copr.fedorainfracloud.org:codifryed:CoolerControl; then
-  if ! dnf5 install -y coolercontrol coolercontrold --repo=terra; then
-    echo CoolerControl installation failed!
-  else
-    systemctl enable coolercontrold
-  fi
-else
+if ignore_error dnf5 install -y coolercontrol coolercontrold --repo=copr:copr.fedorainfracloud.org:codifryed:CoolerControl; then
+  systemctl enable coolercontrold
+elif ignore_error dnf5 install -y coolercontrol coolercontrold --repo=terra; then
   systemctl enable coolercontrold
 fi
 dnf5 config-manager disable copr:copr.fedorainfracloud.org:codifryed:CoolerControl
@@ -123,7 +124,7 @@ dnf5 config-manager addrepo --from-repofile=https://fedorapeople.org/groups/virt
 dnf5 config-manager disable virtio-win-stable virtio-win-latest virtio-win-source
 
 # Syncthing Tray
-dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_"$fedora_ver"/home:mkittler.repo
+dnf5 config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:mkittler/Fedora_"${fedora_ver}"/home:mkittler.repo
 dnf5 install -y syncthingtray-qt6 syncthingplasmoid-qt6 syncthingfileitemaction-qt6 syncthingctl-qt6
 dnf5 config-manager disable home_mkittler
 
@@ -143,7 +144,7 @@ echo defaultyes=True | tee -a /etc/dnf/dnf.conf
 dnf5 config-manager enable terra
 dnf5 config-manager enable terra-extras
 # Enable RPM Fusion
-dnf5 install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-"$fedora_ver".noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-"$fedora_ver".noarch.rpm
+dnf5 install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-"${fedora_ver}".noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-"${fedora_ver}".noarch.rpm
 dnf5 config-manager enable fedora-cisco-openh264
 dnf5 config-manager enable rpmfusion-free rpmfusion-free-updates rpmfusion-nonfree rpmfusion-nonfree-updates
 # Topgrade
@@ -161,9 +162,7 @@ ln -sf /usr/lib/systemd/system/kmsconvt@.service /etc/systemd/system/autovt@.ser
 dnf5 config-manager disable copr:copr.fedorainfracloud.org:jfalempe:kmscon
 
 # X11
-if ! dnf5 install -y plasma-workspace-x11; then
-    echo "DEBUG: plasma-workspace-x11 FAILED"
-fi
+ignore_error dnf5 nstall -y plasma-workspace-x11
 
 # skip btdu, it causes trouble atm and i made a homebrew formula
 dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ \
@@ -172,7 +171,7 @@ dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ \
                 kitty ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
                 rmlint cava vkmark iotop powertop below firejail earlyoom \
                 hardinfo2 sysbench iperf3 \
-                lxqt-admin pcmanfm-qt zswap-cli qt5ct qt6ct \
+                lxqt-admin pcmanfm-qt zswap-cli qt5ct qt6ct at-spi2-core accerciser \
                 pandoc pandoc-pdf weasyprint cups-pdf \
                 android-udev-rules chkconfig cpuinfo plocate
                 # cmake fakeroot mujs patch pigz rhash (included in brew)
@@ -181,6 +180,40 @@ dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ \
 # we have bazaar...?
 #dnf5 install -y --setopt=install_weak_deps=False plasma-discover plasma-discover-flatpak plasma-discover-kns
 
+# KDE customization
+ignore_error systemctl enable --now systemd-sysext
+ignore_error systemd-sysext unmerge
+create() {
+    if ! [[ -e "${folder}" ]] ; then
+        mkdir -p "${folder}"
+        touch "${folder}/${file}"
+    fi
+}
+#############################################
+origin=/usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/
+folder=/etc/extensions/desktop-italics/${origin}
+file=FolderItemDelegate.qml
+create
+perl -p0 -e 's/font.italic/\/\/ font.italic/' "${origin}/${file}" | tee "${folder}/${file}" >/dev/null
+
+folder=/etc/extensions/desktop-italics/usr/lib/extension-release.d
+file=extension-release.desktop-italics
+create
+echo ID=_any | tee "${folder}/${file}" >/dev/null
+#############################################
+origin=/usr/share/plasma/shells/org.kde.plasma.desktop/contents/lockscreen/
+folder=/etc/extensions/lockscreen-unblur/${origin}
+file=LockScreenUi.qml
+create
+
+perl -p0 -e 's/(hideClockWhenIdle\n +\})/$1 \*\// ; s/WallpaperFader/\/\* WallpaperFader/' "${origin}/${file}" | tee "${folder}/${file}" >/dev/null
+folder=/etc/extensions/lockscreen-unblur/usr/lib/extension-release.d
+file=extension-release.lockscreen-unblur
+create
+echo ID=_any | tee "${folder}/${file}" >/dev/null
+#############################################
+ignore_error systemd-sysext merge
+# End KDE customization
 
 ################----PERSONAL-END----################
 # Use a COPR Example:
