@@ -40,7 +40,7 @@ if ignore_error rpm --import https://packages.microsoft.com/keys/microsoft.asc; 
     # dnf5 install -y https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-1.rh.x86_64.rpm
 
     dnf5 config-manager addrepo --from-repofile=https://packages.microsoft.com/yumrepos/vscode/config.repo --save-filename=vscode.repo
-    dnf5 install -y code --repo=vscode-yum
+    dnf5 install -y code --from-repo=vscode-yum
     dnf5 config-manager disable vscode-yum
 fi
 
@@ -57,13 +57,13 @@ baseurl=https://repo.jotta.cloud/redhat
 gpgcheck=1
 gpgkey=https://repo.jotta.cloud/public.gpg
 EOF
-dnf5 install -y jotta-cli --repo=jotta-cli
+dnf5 install -y jotta-cli --from-repo=jotta-cli
 dnf5 config-manager disable jotta-cli
 
 # ProtonVPN
 dnf5 install -y https://repo.protonvpn.com/fedora-"${fedora_ver}"-stable/protonvpn-stable-release/protonvpn-stable-release-1.0.4-1.noarch.rpm
-ignore_error dnf5 install -y proton-vpn-gnome-desktop proton-vpn-cli --repo=protonvpn-fedora-stable || \
-ignore_error dnf5 install -y proton-vpn-gnome-desktop proton-vpn-cli --repo=terra
+ignore_error dnf5 install -y proton-vpn-gnome-desktop proton-vpn-cli --from-repo=protonvpn-fedora-stable || \
+ignore_error dnf5 install -y proton-vpn-gnome-desktop proton-vpn-cli --from-repo=terra
 dnf5 config-manager disable protonvpn-fedora-stable
 
 # Mullvad VPN
@@ -75,16 +75,16 @@ dnf5 config-manager disable protonvpn-fedora-stable
 #---# https://archive.is/wip/mh6nH
 #dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/stable/mullvad.repo --save-filename=mullvad-stable.repo
 #dnf5 config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/beta/mullvad.repo --save-filename=mullvad-beta.repo
-#dnf5 install -y mullvad-vpn --repo=mullvad-stable
+#dnf5 install -y mullvad-vpn --from-repo=mullvad-stable
 #systemctl enable mullvad-early-boot-blocking
 #systemctl enable mullvad-daemon
 
 # CoolerControl (Terra is real outdated)
 dnf5 copr enable -y codifryed/CoolerControl
 dnf5 install -y liquidctl
-if ignore_error dnf5 install -y coolercontrol coolercontrold --repo=copr:copr.fedorainfracloud.org:codifryed:CoolerControl; then
+if ignore_error dnf5 install -y coolercontrol coolercontrold --from-repo=copr:copr.fedorainfracloud.org:codifryed:CoolerControl; then
   systemctl enable coolercontrold
-elif ignore_error dnf5 install -y coolercontrol coolercontrold --repo=terra; then
+elif ignore_error dnf5 install -y coolercontrol coolercontrold --from-repo=terra; then
   systemctl enable coolercontrold
 fi
 dnf5 config-manager disable copr:copr.fedorainfracloud.org:codifryed:CoolerControl
@@ -102,7 +102,7 @@ dnf5 install -y https://download1.rstudio.org/electron/rhel9/x86_64/rstudio-"${R
 
 # Sublime Text (now has flatpak!)
 #dnf5 config-manager addrepo --from-repofile=https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo
-#dnf5 install -y sublime-text --repo=sublime-text
+#dnf5 install -y sublime-text --from-repo=sublime-text
 #repo-disable /etc/yum.repos.d/sublime-text.repo
 
 # Portmaster
@@ -111,7 +111,7 @@ dnf5 install -y https://download1.rstudio.org/electron/rhel9/x86_64/rstudio-"${R
 
 # Tailscale
 # Repo file already included
-dnf5 install -y tailscale --repo=tailscale-stable
+dnf5 install -y tailscale --from-repo=tailscale-stable
 dnf5 config-manager disable tailscale-stable
 
 # Beyond Compare
@@ -158,12 +158,16 @@ dnf5 config-manager disable copr:copr.fedorainfracloud.org:ntulinux:wavemon
 
 # kmscon
 dnf5 copr enable -y jfalempe/kmscon
-dnf5 install -y kmscon kmscon-freetype kmscon-gl kmscon-pango --repo=copr:copr.fedorainfracloud.org:jfalempe:kmscon
+dnf5 install -y kmscon kmscon-freetype kmscon-gl kmscon-pango --from-repo=copr:copr.fedorainfracloud.org:jfalempe:kmscon
 ln -sf /usr/lib/systemd/system/kmsconvt@.service /etc/systemd/system/autovt@.service
 dnf5 config-manager disable copr:copr.fedorainfracloud.org:jfalempe:kmscon
 
 # X11
 ignore_error dnf5 nstall -y plasma-workspace-x11
+
+# store
+dnf5 install -y yumex --from-repo=terra
+dnf5 install -y dnfdragora
 
 # skip btdu, it causes trouble atm and i made a homebrew formula
 dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ flashrom \
