@@ -28,7 +28,7 @@ ignore_error() {
     else
         local rc=$?
         echo "DEBUG: command failed (${rc}): $*"
-        return "${rc}"
+        return 0
     fi
 }
 
@@ -62,7 +62,8 @@ dnf5 config-manager disable jotta-cli
 
 # ProtonVPN
 dnf5 install -y https://repo.protonvpn.com/fedora-"${fedora_ver}"-stable/protonvpn-stable-release/protonvpn-stable-release-1.0.4-1.noarch.rpm
-ignore_error dnf5 install -y proton-vpn-gnome-desktop proton-vpn-cli --repo=protonvpn-fedora-stable
+ignore_error dnf5 install -y proton-vpn-gnome-desktop proton-vpn-cli --repo=protonvpn-fedora-stable || \
+ignore_error dnf5 install -y proton-vpn-gnome-desktop proton-vpn-cli --repo=terra
 dnf5 config-manager disable protonvpn-fedora-stable
 
 # Mullvad VPN
