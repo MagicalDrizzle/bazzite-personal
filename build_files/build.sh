@@ -166,7 +166,7 @@ dnf5 config-manager disable copr:copr.fedorainfracloud.org:jfalempe:kmscon
 ignore_error dnf5 nstall -y plasma-workspace-x11
 
 # skip btdu, it causes trouble atm and i made a homebrew formula
-dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ \
+dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ flashrom \
                 android-tools usbview podman-compose \
                 playerctl \
                 kitty ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
