@@ -165,14 +165,11 @@ dnf5 config-manager disable copr:copr.fedorainfracloud.org:jfalempe:kmscon
 # X11
 ignore_error dnf5 nstall -y plasma-workspace-x11
 
-# store
-dnf5 install -y yumex --from-repo=terra
-dnf5 install -y dnfdragora
-
 # skip btdu, it causes trouble atm and i made a homebrew formula
 dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ flashrom \
+                byebyebios efivar pesign sbsigntools smbios-utils cmospwd coreboot-utils-all \
                 android-tools usbview podman-compose \
-                playerctl \
+                playerctl python3-pyside6 pyside6-tools \
                 kitty ksystemlog byobu golly ucblogo ddccontrol ddccontrol-gtk \
                 rmlint cava vkmark iotop powertop below firejail earlyoom \
                 hardinfo2 sysbench iperf3 \
