@@ -187,7 +187,7 @@ dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ flashrom gdisk \
 #dnf5 install -y --setopt=install_weak_deps=False plasma-discover plasma-discover-flatpak plasma-discover-kns
 
 # KDE customization
-ignore_error systemctl enable --now systemd-sysext
+ignore_error systemctl enable systemd-sysext
 ignore_error systemd-sysext unmerge
 create() {
     if ! [[ -e "${folder}" ]] ; then
