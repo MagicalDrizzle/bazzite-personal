@@ -166,6 +166,10 @@ dnf5 config-manager disable copr:copr.fedorainfracloud.org:jfalempe:kmscon
 ignore_error dnf5 nstall -y plasma-workspace-x11
 
 # skip btdu, it causes trouble atm and i made a homebrew formula
+# coreboot-utils-ectool conflicts with fw-ectool (Framework)
+dnf5 remove -y fw-ectool
+dnf5 install -y coreboot-utils-all
+
 dnf5 install -y gparted gsmartcontrol btrfs-heatmap memtest86+ flashrom gdisk \
                 byebyebios efivar pesign sbsigntools smbios-utils cmospwd coreboot-utils-all \
                 android-tools usbview podman-compose \
