@@ -188,7 +188,8 @@ dnf5 install -y gparted gsmartcontrol btrfs-heatmap btrfsmaintenance memtest86+ 
 
 # OpenZFS
 dnf5 install -y https://zfsonlinux.org/fedora/zfs-release-3-1"$(rpm --eval "%{dist}")".noarch.rpm
-dnf5 install -y kernel-devel-"$(uname -r | awk -F'-' '{print $1}')"
+#dnf5 install -y kernel-devel-"$(uname -r | awk -F'-' '{print $1}')"
+dnf5 install -y kernel-devel-matched
 dnf5 config-manager setopt zfs*.enabled=0
 dnf5 config-manager setopt zfs-latest.enabled=1
 dnf5 install -y zfs
