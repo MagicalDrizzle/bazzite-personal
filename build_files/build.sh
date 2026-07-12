@@ -170,7 +170,7 @@ ignore_error dnf5 nstall -y plasma-workspace-x11
 dnf5 remove -y fw-ectool
 dnf5 install -y coreboot-utils-all
 
-dnf5 install -y gparted gsmartcontrol btrfs-heatmap btrfsmaintenance memtest86+ flashrom gdisk \
+dnf5 install -y gparted gsmartcontrol btrfs-heatmap btrfsmaintenance memtest86+ flashrom gdisk mmc-utils \
                 byebyebios efivar pesign sbsigntools smbios-utils cmospwd coreboot-utils-all \
                 android-tools usbview podman-compose \
                 playerctl python3-pyside6 pyside6-tools \
