@@ -186,6 +186,16 @@ dnf5 install -y gparted gsmartcontrol btrfs-heatmap btrfsmaintenance memtest86+ 
 # we have bazaar...?
 #dnf5 install -y --setopt=install_weak_deps=False plasma-discover plasma-discover-flatpak plasma-discover-kns
 
+# OpenZFS
+dnf5 install -y https://zfsonlinux.org/fedora/zfs-release-3-1"$(rpm --eval "%{dist}")".noarch.rpm
+dnf5 install -y kernel-devel-"$(uname -r | awk -F'-' '{print $1}')"
+dnf5 config-manager setopt zfs*.enabled=0
+dnf5 config-manager setopt zfs-latest.enabled=1
+dnf5 install -y zfs
+modprobe zfs
+# Protect ZFS from being removed by new kernel
+echo 'zfs' > /etc/dnf/protected.d/zfs.conf
+
 # KDE customization
 ignore_error systemctl enable systemd-sysext
 ignore_error systemd-sysext unmerge
