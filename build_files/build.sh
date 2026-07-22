@@ -111,8 +111,8 @@ dnf5 install -y https://download1.rstudio.org/electron/rhel9/x86_64/rstudio-"${R
 
 # Tailscale
 # Repo file already included
-dnf5 install -y tailscale --from-repo=tailscale-stable
-dnf5 config-manager disable tailscale-stable
+#dnf5 install -y tailscale --from-repo=tailscale-stable
+#dnf5 config-manager disable tailscale-stable
 
 # Beyond Compare
 dnf5 config-manager addrepo --from-repofile=https://www.scootersoftware.com/scootersoftware.repo
